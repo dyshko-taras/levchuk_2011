@@ -1,0 +1,46 @@
+# App Configuration
+app:
+  name: '2011'
+  bundle_id: 'com.schedule2011.hockey'
+  number: '2011'
+  app_id: 'schedule2011'
+  domain: 'schedule2011.click'
+  localization: EN
+
+# AppsFlyer API Token, filled in manually
+appsflyer:
+  appsflyer_token: ''
+  appsflyer_dev_key: ''
+
+# Appmetrica settings, filled in manually
+appmetrica:
+  app_id: ''
+  post_api_key: ''
+  sdk_key: ''
+
+# Tracking Configuration
+tracking:
+  link_id: 'schedule2011'
+  traffle_link_id: 'schedule2011'
+
+# Privacy Settings (auto-generated: compact)
+privacy:
+  callback: 'privCb'
+  accepted_param: 'userAccept'
+  developer_name: ''
+  server: 'traffle'
+
+# Notification Settings (auto-generated)
+notifications:
+  skip_param: 'noNotif'
+  token_param: 'pushTok'
+
+# Request Parameters (auto-generated)
+request_params:
+  installer_param: 'src'
+  user_id_param: 'uid'
+  oaid_param: 'and'
+  google_ad_id_param: 'ggl'
+  appsflyer_id_param: 'afl'
+  appsflyer_source_param: 'attr'
+  appsflyer_campaign_param: 'camp'
