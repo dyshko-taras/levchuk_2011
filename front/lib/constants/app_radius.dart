@@ -7,11 +7,15 @@ class AppRadius {
   static const double mdValue = 7.92;
   static const double lgValue = 15.18;
   static const double circleValue = 999;
+  static const double bottomNavValue = 31.68;
 
   static const BorderRadius sm = BorderRadius.all(Radius.circular(smValue));
   static const BorderRadius md = BorderRadius.all(Radius.circular(mdValue));
   static const BorderRadius lg = BorderRadius.all(Radius.circular(lgValue));
   static const BorderRadius pill = BorderRadius.all(
     Radius.circular(circleValue),
+  );
+  static const BorderRadius bottomNav = BorderRadius.all(
+    Radius.circular(bottomNavValue),
   );
 }

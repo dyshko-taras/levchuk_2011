@@ -1,3 +1,9 @@
+import 'package:flutter/widgets.dart';
+import 'package:ice_line_tracker/ui/pages/main_shell_page.dart';
+import 'package:ice_line_tracker/ui/pages/settings_page.dart';
+import 'package:ice_line_tracker/ui/pages/splash_page.dart';
+import 'package:ice_line_tracker/ui/pages/welcome_page.dart';
+
 /// App route names.
 class AppRoutes {
   const AppRoutes._();
@@ -19,7 +25,7 @@ class AppRoutes {
   static const String favorites = '/favorites';
   /// Predictions tab.
   static const String predictions = '/predictions';
-  /// Settings tab.
+  /// Settings page.
   static const String settings = '/settings';
 
   /// Game center details.
@@ -28,4 +34,18 @@ class AppRoutes {
   static const String team = '/team';
   /// Player page.
   static const String player = '/player';
+
+  static Map<String, WidgetBuilder> get routes => <String, WidgetBuilder>{
+        splash: (_) => const SplashPage(),
+        welcome: (_) => const WelcomePage(),
+        root: (_) => const MainShellPage(initialTab: MainTab.home),
+        home: (_) => const MainShellPage(initialTab: MainTab.home),
+        standings: (_) => const MainShellPage(initialTab: MainTab.standings),
+        compare: (_) => const MainShellPage(initialTab: MainTab.compare),
+        favorites: (_) => const MainShellPage(initialTab: MainTab.favorites),
+        predictions: (_) => const MainShellPage(
+          initialTab: MainTab.predictions,
+        ),
+        settings: (_) => const SettingsPage(),
+      };
 }

@@ -9,4 +9,8 @@ class AppSizes {
   static const double contentWidth = 323.4;
   static const double sidePadding = 16.5;
   static const double safeAreaTop = 23.76;
+
+  static const double bottomNavHeight = 59.4;
+  static const double bottomNavItemDiameter = 47.52;
+  static const double bottomNavFabDiameter = 59.4;
 }

@@ -36,24 +36,29 @@
   - [x] Створити репозиторії `lib/data/repositories/` для кожної фічі (API → мапінг → кеш/стор).
   - [x] Додати базову обробку помилок/станів (loading/error/empty) як спільний патерн для UI.
 
-- [ ] **Фаза 3 — Локальне сховище: first_run, налаштування, кеш**
-  - [ ] Реалізувати `prefs_store.dart` (shared_preferences): `first_run`, default date, toggles нотифікацій.
-  - [ ] Додати простий кеш (in-memory + persisted за потребою) для:
-    - [ ] `/teams`, `/seasons` (bootstrap).
-    - [ ] schedule/standings (offline режим Home/Predictions).
-    - [ ] favorites (команди/ігри + параметри нотифікацій).
-  - [ ] Узгодити правила offline з `front/info/technical_spec.md` (показ cached даних + банер “Offline — showing cached scores”).
+- [x] **Фаза 3 — Локальне сховище: first_run, налаштування, кеш**
+  - [x] Реалізувати `prefs_store.dart` (shared_preferences): `first_run`, default date, toggles нотифікацій.
+  - [x] Додати простий кеш (in-memory + persisted за потребою) для:
+    - [x] `/teams`, `/seasons` (bootstrap).
+    - [x] schedule/standings (offline режим Home/Predictions).
+    - [x] favorites (команди/ігри + параметри нотифікацій).
+  - [x] Узгодити правила offline з `front/info/technical_spec.md` (показ cached даних + банер “Offline — showing cached scores”).
 
-- [ ] **Фаза 4 — Навігація та Main Shell**
-  - [ ] Реалізувати `lib/app.dart` та `MaterialApp` з `initialRoute` і таблицею маршрутів.
-  - [ ] Реалізувати `SplashPage` → роутинг на `WelcomePage` (first run) або `MainShellPage`.
-  - [ ] Реалізувати `MainShellPage` з Bottom Navigation (AnimatedBottomNavigationBar) та вкладками:
-    - [ ] Home
-    - [ ] Standings
-    - [ ] Compare
-    - [ ] Favorites
-    - [ ] Predictions
-    - [ ] Settings
+- [x] **Фаза 3b — Persisted cache у БД (Hive CE)**
+  - [x] Замінити persisted кеш (раніше `shared_preferences`) на Hive CE для schedule/standings/teams/seasons.
+  - [x] Додати TTL політики: історія `7d`, поточні матчі `15m`, майбутні матчі `1h`.
+  - [x] Міграція/очистка старих cache keys (з `shared_preferences`) якщо вони були у користувачів (не потрібно, бо не було прод).
+
+- [x] **Фаза 4 — Навігація та Main Shell**
+  - [x] Реалізувати `lib/app.dart` та `MaterialApp` з `initialRoute` і таблицею маршрутів.
+  - [x] Реалізувати `SplashPage` → роутинг на `WelcomePage` (first run) або `MainShellPage`.
+  - [x] Реалізувати `MainShellPage` з Bottom Navigation (AnimatedBottomNavigationBar) та вкладками:
+    - [x] Home
+    - [x] Standings
+    - [x] Compare
+    - [x] Favorites
+    - [x] Predictions
+    - [x] Settings
 
 - [ ] **Фаза 5 — Splash + Welcome**
   - [ ] `SplashPage`: бренд, лоадер, ініціалізація `/teams` + `/seasons`, `first_run`.

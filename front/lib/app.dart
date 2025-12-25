@@ -2,6 +2,7 @@ import 'package:device_preview/device_preview.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
+import 'package:ice_line_tracker/constants/app_routes.dart';
 import 'package:ice_line_tracker/constants/app_strings.dart';
 import 'package:ice_line_tracker/ui/theme/app_theme.dart';
 
@@ -20,9 +21,8 @@ class App extends StatelessWidget {
       locale: enableDevicePreview ? DevicePreview.locale(context) : null,
       builder: enableDevicePreview ? DevicePreview.appBuilder : null,
       theme: appTheme(),
-      home: const Scaffold(
-        body: Center(child: Text(AppStrings.splashBrandTitle)),
-      ),
+      initialRoute: AppRoutes.splash,
+      routes: AppRoutes.routes,
     );
   }
 }
