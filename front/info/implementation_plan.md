@@ -60,10 +60,16 @@
     - [x] Predictions
     - [x] Settings
 
-- [ ] **Фаза 5 — Splash + Welcome**
-  - [ ] `SplashPage`: бренд, лоадер, ініціалізація `/teams` + `/seasons`, `first_run`.
-  - [ ] `WelcomePage`: hero image, segmented default date (Today/Yesterday/Tomorrow), toggle push alerts, CTA “Get Started”.
-  - [ ] Зберігати вибір у локальні налаштування; по CTA встановити `first_run=false` і перейти в `MainShellPage`.
+- [x] **Фаза 4b — Provider: state management + DI**
+  - [x] Додати `MultiProvider` у `lib/app.dart` (top-level providers).
+  - [x] Додати `PrefsProvider` (читання/запис `PrefsStore`, draft-стейт для Welcome).
+  - [x] Додати `AppStartupProvider` (Splash init: preload `/teams` + `/seasons`, min-delay, nextRoute).
+  - [x] Переписати `SplashPage`/`WelcomePage`, щоб UI не створював репозиторії/Prefs напряму (все через providers).
+
+- [x] **Фаза 5 — Splash + Welcome**
+  - [x] `SplashPage`: бренд, лоадер, ініціалізація `/teams` + `/seasons`, `first_run`.
+  - [x] `WelcomePage`: hero image, segmented default date (Today/Yesterday/Tomorrow), toggle push alerts, CTA “Get Started”.
+  - [x] Зберігати вибір у локальні налаштування; по CTA встановити `first_run=false` і перейти в `MainShellPage`.
 
 - [ ] **Фаза 6 — Home (Live Scores)**
   - [ ] API: `GET /schedule?date={targetDate}` для Today/Yesterday/Tomorrow (+ custom з календаря).

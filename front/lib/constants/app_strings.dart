@@ -4,6 +4,7 @@ class AppStrings {
   static const String splashBrandTitle = 'IceLine Tracker';
   static const String splashBrandSubtitle = 'NHL Stats & Insights';
   static const String splashTagline = 'Follow every shift, goal and trend.';
+  static const String splashInitFailed = 'Initialization failed.';
 
   static const String welcomeTitle = 'Welcome to IceLine Tracker';
   static const String welcomeDescription =
