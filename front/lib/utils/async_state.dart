@@ -33,7 +33,7 @@ extension AsyncStateX<T> on AsyncState<T> {
   bool get hasError => this is AsyncError<T>;
 
   T? get valueOrNull => switch (this) {
-        AsyncData(:final value) => value,
-        _ => null,
-      };
+    AsyncData(:final value) => value,
+    _ => null,
+  };
 }

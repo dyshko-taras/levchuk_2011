@@ -5,7 +5,7 @@ import 'package:ice_line_tracker/data/models/nhl_schedule_response.dart';
 
 class ScheduleRepository {
   ScheduleRepository({required NhlScheduleService scheduleService})
-      : _scheduleService = scheduleService;
+    : _scheduleService = scheduleService;
 
   final NhlScheduleService _scheduleService;
 

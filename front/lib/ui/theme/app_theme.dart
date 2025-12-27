@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import 'package:ice_line_tracker/ui/theme/app_colors.dart';
 import 'package:ice_line_tracker/ui/theme/app_fonts.dart';
 
@@ -30,6 +29,27 @@ ThemeData appTheme() {
       backgroundColor: AppColors.backgroundWhite,
       foregroundColor: AppColors.textBlack,
       elevation: 0,
+    ),
+    // 👇 SWITCH THEME
+    switchTheme: SwitchThemeData(
+      thumbColor: WidgetStateProperty.resolveWith((states) {
+        return Colors.white;
+      }),
+      trackColor: WidgetStateProperty.resolveWith((states) {
+        if (states.contains(WidgetState.disabled)) {
+          return AppColors.surfaceGray;
+        }
+        if (states.contains(WidgetState.selected)) {
+          return AppColors.primaryRed;
+        }
+        return AppColors.borderGray;
+      }),
+      trackOutlineColor: WidgetStateProperty.resolveWith((states) {
+        if (states.contains(WidgetState.selected)) {
+          return AppColors.primaryRed;
+        }
+        return AppColors.borderGray;
+      }),
     ),
   );
 }

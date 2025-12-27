@@ -22,7 +22,7 @@ class AppStartupProvider extends ChangeNotifier {
   final CachedBootstrapRepository _bootstrap;
   final PrefsStore _prefsStore;
 
-  static const Duration minSplashDuration = Duration(milliseconds: 1700);
+  static const Duration minSplashDuration = Duration(milliseconds: 5000);
 
   AppStartupStatus _status = AppStartupStatus.idle;
   AppStartupStatus get status => _status;

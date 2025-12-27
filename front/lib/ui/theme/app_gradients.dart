@@ -12,4 +12,13 @@ class AppGradients {
       Color(0xFFCBCBCB),
     ],
   );
+
+  static const LinearGradient segmentedControl = LinearGradient(
+    begin: Alignment.topCenter,
+    end: Alignment.bottomCenter,
+    colors: [
+      AppColors.backgroundWhite,
+      Color(0xFFCBCBCB),
+    ],
+  );
 }

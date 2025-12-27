@@ -7,16 +7,11 @@ import 'package:ice_line_tracker/constants/app_routes.dart';
 import 'package:ice_line_tracker/constants/app_sizes.dart';
 import 'package:ice_line_tracker/constants/app_spacing.dart';
 import 'package:ice_line_tracker/constants/app_strings.dart';
+import 'package:ice_line_tracker/enums/main_tab.dart';
+import 'package:ice_line_tracker/providers/shell_navigation_provider.dart';
 import 'package:ice_line_tracker/ui/theme/app_colors.dart';
 import 'package:ice_line_tracker/ui/theme/app_gradients.dart';
-
-enum MainTab {
-  home,
-  standings,
-  compare,
-  favorites,
-  predictions,
-}
+import 'package:provider/provider.dart';
 
 class MainShellPage extends StatefulWidget {
   const MainShellPage({
@@ -31,29 +26,19 @@ class MainShellPage extends StatefulWidget {
 }
 
 class _MainShellPageState extends State<MainShellPage> {
-  late MainTab _tab;
-  late int _navIndex;
-
   @override
   void initState() {
     super.initState();
-    _tab = widget.initialTab;
-    _navIndex = _tabToIndex(_tab) ?? 0;
-  }
-
-  int? _tabToIndex(MainTab tab) {
-    return switch (tab) {
-      MainTab.standings => 0,
-      MainTab.compare => 1,
-      MainTab.favorites => 2,
-      MainTab.predictions => 3,
-      MainTab.home => 4,
-    };
+    context.read<ShellNavigationProvider>().setInitialTab(widget.initialTab);
   }
 
   @override
   Widget build(BuildContext context) {
     const tabs = <_TabSpec>[
+      _TabSpec(
+        iconPath: AppIcons.navHome,
+        tab: MainTab.home,
+      ),
       _TabSpec(
         iconPath: AppIcons.navStandings,
         tab: MainTab.standings,
@@ -70,13 +55,11 @@ class _MainShellPageState extends State<MainShellPage> {
         iconPath: AppIcons.navPredictions,
         tab: MainTab.predictions,
       ),
-      _TabSpec(
-        iconPath: AppIcons.navHome,
-        tab: MainTab.home,
-      ),
     ];
 
-    final activeLabel = switch (_tab) {
+    final shell = context.watch<ShellNavigationProvider>();
+    final activeTab = shell.activeTab;
+    final activeLabel = switch (activeTab) {
       MainTab.home => AppStrings.navHome,
       MainTab.standings => AppStrings.navStandings,
       MainTab.compare => AppStrings.navCompare,
@@ -143,20 +126,19 @@ class _MainShellPageState extends State<MainShellPage> {
                           tabs[index].iconPath,
                           width: AppSizes.iconSm,
                           height: AppSizes.iconSm,
-                          colorFilter:
-                              ColorFilter.mode(iconColor, BlendMode.srcIn),
+                          colorFilter: ColorFilter.mode(
+                            iconColor,
+                            BlendMode.srcIn,
+                          ),
                         ),
                       ),
                     ),
                   ),
                 );
               },
-              activeIndex: _navIndex,
+              activeIndex: shell.activeIndex,
               onTap: (index) {
-                setState(() {
-                  _navIndex = index;
-                  _tab = tabs[index].tab;
-                });
+                shell.setTab(tabs[index].tab);
               },
               height: AppSizes.bottomNavHeight,
               gapLocation: GapLocation.none,

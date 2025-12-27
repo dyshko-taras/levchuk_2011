@@ -10,9 +10,9 @@ class CachedStandingsRepository {
     required StandingsRepository remote,
     required HiveJsonCache diskCache,
     MemoryCache<String, Object?>? memoryCache,
-  })  : _remote = remote,
-        _diskCache = diskCache,
-        _memoryCache = memoryCache ?? MemoryCache<String, Object?>();
+  }) : _remote = remote,
+       _diskCache = diskCache,
+       _memoryCache = memoryCache ?? MemoryCache<String, Object?>();
 
   final StandingsRepository _remote;
   final HiveJsonCache _diskCache;

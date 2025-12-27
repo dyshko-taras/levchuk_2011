@@ -32,16 +32,16 @@ class FavoritesStore {
     return added;
   }
 
-  Set<int> getFavoriteGameIds() => (_prefs.getStringList(_kFavoriteGames) ??
-          const <String>[])
-      .map(int.tryParse)
-      .whereType<int>()
-      .toSet();
+  Set<int> getFavoriteGameIds() =>
+      (_prefs.getStringList(_kFavoriteGames) ?? const <String>[])
+          .map(int.tryParse)
+          .whereType<int>()
+          .toSet();
 
   Future<void> setFavoriteGameIds(Set<int> gameIds) => _prefs.setStringList(
-        _kFavoriteGames,
-        gameIds.map((e) => e.toString()).toList()..sort(),
-      );
+    _kFavoriteGames,
+    gameIds.map((e) => e.toString()).toList()..sort(),
+  );
 
   Future<bool> toggleFavoriteGame(int gameId) async {
     final current = getFavoriteGameIds();
@@ -62,6 +62,5 @@ class FavoritesStore {
     int gameId,
     GameAlertType type, {
     required bool enabled,
-  }) =>
-      _prefs.setBool(_gameAlertKey(gameId, type), enabled);
+  }) => _prefs.setBool(_gameAlertKey(gameId, type), enabled);
 }

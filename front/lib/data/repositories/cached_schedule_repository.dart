@@ -10,9 +10,9 @@ class CachedScheduleRepository {
     required ScheduleRepository remote,
     required HiveJsonCache diskCache,
     MemoryCache<String, Object?>? memoryCache,
-  })  : _remote = remote,
-        _diskCache = diskCache,
-        _memoryCache = memoryCache ?? MemoryCache<String, Object?>();
+  }) : _remote = remote,
+       _diskCache = diskCache,
+       _memoryCache = memoryCache ?? MemoryCache<String, Object?>();
 
   final ScheduleRepository _remote;
   final HiveJsonCache _diskCache;

@@ -10,9 +10,9 @@ class CachedBootstrapRepository {
     required BootstrapRepository remote,
     required HiveJsonCache diskCache,
     MemoryCache<String, Object?>? memoryCache,
-  })  : _remote = remote,
-        _diskCache = diskCache,
-        _memoryCache = memoryCache ?? MemoryCache<String, Object?>();
+  }) : _remote = remote,
+       _diskCache = diskCache,
+       _memoryCache = memoryCache ?? MemoryCache<String, Object?>();
 
   final BootstrapRepository _remote;
   final HiveJsonCache _diskCache;
@@ -32,10 +32,7 @@ class CachedBootstrapRepository {
         nowUtc: nowUtc,
         fromJson: (json) {
           if (json is! List) return <int>[];
-          return json
-              .whereType<num>()
-              .map((e) => e.toInt())
-              .toList();
+          return json.whereType<num>().map((e) => e.toInt()).toList();
         },
       );
       if (cached != null && cached.isNotEmpty) {

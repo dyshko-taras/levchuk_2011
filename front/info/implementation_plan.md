@@ -67,9 +67,22 @@
   - [x] Переписати `SplashPage`/`WelcomePage`, щоб UI не створював репозиторії/Prefs напряму (все через providers).
 
 - [x] **Фаза 5 — Splash + Welcome**
-  - [x] `SplashPage`: бренд, лоадер, ініціалізація `/teams` + `/seasons`, `first_run`.
+  - [x] `SplashPage`: бренд, лоадер, bootstrap teams + seasons, `first_run`.
   - [x] `WelcomePage`: hero image, segmented default date (Today/Yesterday/Tomorrow), toggle push alerts, CTA “Get Started”.
   - [x] Зберігати вибір у локальні налаштування; по CTA встановити `first_run=false` і перейти в `MainShellPage`.
+
+- [x] **Фаза 5b — Providers (усі фічі)**
+  - [x] Узгодити єдиний патерн стану для фіч (loading/error/data/empty, retry) на базі `lib/utils/async_state.dart`.
+  - [x] Додати провайдер для shell-навігації (tab index + deep links для `/home`, `/standings`, `/compare`, `/favorites`, `/predictions`).
+  - [x] Додати `HomeProvider` (schedule/live scores: завантаження на дату, refresh, offline/cached банер, favorite/notification toggles).
+  - [x] Додати `StandingsProvider` (wild card/league/division, refresh, derived grouping/sorting згідно tech spec).
+  - [x] Додати `GameCenterProvider` (завантаження та агрегація даних для Plays/Goals/Penalties/Stats/Recap + favorite/notifications).
+  - [x] Додати `TeamProvider` (roster/schedule/club stats + favorite/notifications).
+  - [x] Додати `PlayerProvider` (profile/overview + game log + derived stats для UI).
+  - [x] Додати `FavoritesProvider` (Teams/Games списки, per-game notification toggles, синхронізація з Home/GameCenter/Team).
+  - [x] Додати `CompareProvider` (порівняння Team A/B, range, derived метрики, CTA “Open Next Game”).
+  - [x] Додати `PredictionsProvider` (фільтри, refresh, win%/confidence/expected total, details bottom sheet state).
+  - [x] Розширити `PrefsProvider` або додати `SettingsProvider` під Settings (date defaults + notification toggles + app info).
 
 - [ ] **Фаза 6 — Home (Live Scores)**
   - [ ] API: `GET /schedule?date={targetDate}` для Today/Yesterday/Tomorrow (+ custom з календаря).

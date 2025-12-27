@@ -143,6 +143,7 @@ class AppStrings {
   static const String poweredByNhlStatsApiV1 = 'Powered by NHL Stats API v1';
   static const String appVersion = 'App version';
   static const String openSourceLicenses = 'Open source licenses';
+  static const String devicePreview = 'Device preview';
 
   static const String gameInsightLabTitle = 'Game Insight Lab';
   static const String custom = 'Custom';

@@ -24,6 +24,8 @@ class PrefsStore {
   static const _kFinalAlertsEnabled = 'final_alerts_enabled';
   static const _kPreGameRemindersEnabled = 'pre_game_reminders_enabled';
 
+  static const _kDevicePreviewEnabled = 'settings.device_preview_enabled';
+
   bool getFirstRun() => _prefs.getBool(_kFirstRun) ?? true;
   Future<void> setFirstRun({required bool value}) =>
       _prefs.setBool(_kFirstRun, value);
@@ -55,4 +57,9 @@ class PrefsStore {
       _prefs.getBool(_kPreGameRemindersEnabled) ?? false;
   Future<void> setPreGameRemindersEnabled({required bool value}) =>
       _prefs.setBool(_kPreGameRemindersEnabled, value);
+
+  bool getDevicePreviewEnabled() =>
+      _prefs.getBool(_kDevicePreviewEnabled) ?? false;
+  Future<void> setDevicePreviewEnabled({required bool value}) =>
+      _prefs.setBool(_kDevicePreviewEnabled, value);
 }

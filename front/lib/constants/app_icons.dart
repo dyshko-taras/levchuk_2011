@@ -5,7 +5,8 @@ class AppIcons {
   static const String calendar = 'assets/icons/icon_calendar.svg';
   static const String chevronRight = 'assets/icons/icon_chevron_right.svg';
   static const String delete = 'assets/icons/icon_delete.svg';
-  static const String dropdownChevron = 'assets/icons/icon_dropdown_chevron.svg';
+  static const String dropdownChevron =
+      'assets/icons/icon_dropdown_chevron.svg';
   static const String heartOutline = 'assets/icons/icon_heart_outline.svg';
   static const String navCompare = 'assets/icons/icon_nav_compare.svg';
   static const String navFavorites = 'assets/icons/icon_nav_favorites.svg';

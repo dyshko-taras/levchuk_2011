@@ -5,7 +5,7 @@ import 'package:ice_line_tracker/ui/theme/app_colors.dart';
 class AppFonts {
   const AppFonts._();
 
-  static const String familyOpenSans = 'Open Sans';
+  static const String familyOpenSans = 'OpenSans';
 
   static const TextStyle displayLarge = TextStyle(
     fontFamily: familyOpenSans,

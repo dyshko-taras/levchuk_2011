@@ -8,8 +8,8 @@ class BootstrapRepository {
   BootstrapRepository({
     required NhlStandingsService standingsService,
     required NhlSeasonsService seasonsService,
-  })  : _standingsService = standingsService,
-        _seasonsService = seasonsService;
+  }) : _standingsService = standingsService,
+       _seasonsService = seasonsService;
 
   final NhlStandingsService _standingsService;
   final NhlSeasonsService _seasonsService;

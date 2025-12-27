@@ -5,7 +5,7 @@ import 'package:ice_line_tracker/data/models/nhl_standings_response.dart';
 
 class StandingsRepository {
   StandingsRepository({required NhlStandingsService standingsService})
-      : _standingsService = standingsService;
+    : _standingsService = standingsService;
 
   final NhlStandingsService _standingsService;
 
