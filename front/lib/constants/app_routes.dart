@@ -1,5 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:ice_line_tracker/enums/main_tab.dart';
+import 'package:ice_line_tracker/ui/pages/game_center_page.dart';
 import 'package:ice_line_tracker/ui/pages/main_shell_page.dart';
 import 'package:ice_line_tracker/ui/pages/settings_page.dart';
 import 'package:ice_line_tracker/ui/pages/splash_page.dart';
@@ -57,5 +58,6 @@ class AppRoutes {
       initialTab: MainTab.predictions,
     ),
     settings: (_) => const SettingsPage(),
+    gameCenter: (_) => const GameCenterPage(),
   };
 }

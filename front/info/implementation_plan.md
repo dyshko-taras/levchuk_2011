@@ -84,22 +84,23 @@
   - [x] Додати `PredictionsProvider` (фільтри, refresh, win%/confidence/expected total, details bottom sheet state).
   - [x] Розширити `PrefsProvider` або додати `SettingsProvider` під Settings (date defaults + notification toggles + app info).
 
-- [ ] **Фаза 6 — Home (Live Scores)**
-  - [ ] API: `GET /schedule?date={targetDate}` для Today/Yesterday/Tomorrow (+ custom з календаря).
-  - [ ] UI: списки Live Now / Upcoming / Final згідно tech spec, статуси (Live/Scheduled/Final/Postponed).
-  - [ ] Взаємодія: відкриття `GameCenterPage` з `gamePk`, додавання/видалення favorite, quick toggle нотифікацій.
-  - [ ] Offline режим: відображення кешу + індикатор offline.
-  - [ ] Робота з часом/таймзонами як описано в tech spec.
+- [x] **Фаза 6 — Home (Live Scores)**
+  - [x] API: `GET /schedule/{targetDate}` для Today/Yesterday/Tomorrow (+ custom з календаря).
+  - [x] UI: date ribbon (5–7 днів), сегмент Live Now / Upcoming / Final, список матчів згідно tech spec.
+  - [x] Game Row: рахунок, chip статусу (period + clock / Final / Scheduled), `Shots: A – B`, quick actions (notifications + favorites).
+  - [x] Взаємодія: відкриття `GameCenterPage` з `gamePk`, додавання/видалення favorite, quick toggle нотифікацій, pull-to-refresh.
+  - [x] Offline режим: fallback на останні дані + банер `Offline — showing cached scores`.
+  - [x] Робота з часом: показ scheduled часу в локальному часовому поясі.
 
 - [ ] **Фаза 7 — Game Center**
-  - [ ] API: підвантаження play-by-play / landing / boxscore (що потрібно для Plays/Goals/Penalties/Stats/Recap).
-  - [ ] UI: Header strip + chips + actions (back, favorite, notifications, share).
+  - [x] API: підвантаження play-by-play / landing / boxscore (що потрібно для Plays/Goals/Penalties/Stats/Recap).
+  - [x] UI: Header strip + chips + actions (back, favorite, notifications, share).
   - [ ] Tabs:
-    - [ ] Plays (фільтри + список подій)
-    - [ ] Goals
-    - [ ] Penalties
-    - [ ] Stats (Home/Game/Away сегменти, team stats, player tables)
-    - [ ] Recap (score by period, special teams, highlights summary, broadcasters, Share)
+    - [x] Plays (фільтри + список подій)
+    - [x] Goals
+    - [x] Penalties
+    - [x] Stats (Home/Game/Away сегменти, team stats, player tables)
+    - [x] Recap (score by period, special teams, highlights summary, broadcasters, Share)
   - [ ] Навігація: перехід на `TeamPage`/`PlayerPage` з відповідних елементів.
 
 - [ ] **Фаза 8 — Standings**

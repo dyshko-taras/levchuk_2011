@@ -67,6 +67,7 @@ class App extends StatelessWidget {
             schedule: dependencies.cachedScheduleRepository,
             prefsStore: dependencies.prefsStore,
             favoritesStore: dependencies.favoritesStore,
+            gameCenter: dependencies.gameCenterRepository,
           ),
         ),
         ChangeNotifierProvider(

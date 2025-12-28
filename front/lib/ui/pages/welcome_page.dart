@@ -135,7 +135,6 @@ class _WelcomeHero extends StatelessWidget {
 
   static const double _titleFontSize = 28;
   static const double _descriptionFontSize = 18;
-  static const double _descriptionAlpha = 0.6;
 
   @override
   Widget build(BuildContext context) {

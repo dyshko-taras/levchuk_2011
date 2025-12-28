@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -8,7 +10,9 @@ import 'package:ice_line_tracker/constants/app_sizes.dart';
 import 'package:ice_line_tracker/constants/app_spacing.dart';
 import 'package:ice_line_tracker/constants/app_strings.dart';
 import 'package:ice_line_tracker/enums/main_tab.dart';
+import 'package:ice_line_tracker/providers/home_provider.dart';
 import 'package:ice_line_tracker/providers/shell_navigation_provider.dart';
+import 'package:ice_line_tracker/ui/pages/home_page.dart';
 import 'package:ice_line_tracker/ui/theme/app_colors.dart';
 import 'package:ice_line_tracker/ui/theme/app_gradients.dart';
 import 'package:provider/provider.dart';
@@ -59,27 +63,20 @@ class _MainShellPageState extends State<MainShellPage> {
 
     final shell = context.watch<ShellNavigationProvider>();
     final activeTab = shell.activeTab;
-    final activeLabel = switch (activeTab) {
-      MainTab.home => AppStrings.navHome,
-      MainTab.standings => AppStrings.navStandings,
-      MainTab.compare => AppStrings.navCompare,
-      MainTab.favorites => AppStrings.navFavorites,
-      MainTab.predictions => AppStrings.navPredictions,
-    };
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(activeLabel),
-        actions: [
-          IconButton(
-            onPressed: () =>
-                Navigator.of(context).pushNamed(AppRoutes.settings),
-            icon: const Icon(Icons.settings),
-            tooltip: AppStrings.openSettings,
-          ),
+      extendBody: true,
+      appBar: _buildAppBar(context, activeTab),
+      body: IndexedStack(
+        index: shell.activeIndex,
+        children: const [
+          HomePage(),
+          Center(child: Text(AppStrings.standingsTitle)),
+          Center(child: Text(AppStrings.teamCompareTitle)),
+          Center(child: Text(AppStrings.favoritesTitle)),
+          Center(child: Text(AppStrings.gameInsightLabTitle)),
         ],
       ),
-      body: Center(child: Text(activeLabel)),
       bottomNavigationBar: Padding(
         padding: const EdgeInsets.only(
           left: AppSpacing.xl,
@@ -109,8 +106,8 @@ class _MainShellPageState extends State<MainShellPage> {
               itemCount: tabs.length,
               tabBuilder: (index, isActive) {
                 final iconColor = isActive
-                    ? AppColors.textBlack
-                    : Colors.black54;
+                    ? AppColors.primaryRed
+                    : AppColors.textGray;
 
                 return Center(
                   child: Material(
@@ -158,6 +155,91 @@ class _MainShellPageState extends State<MainShellPage> {
         ),
       ),
     );
+  }
+}
+
+PreferredSizeWidget _buildAppBar(BuildContext context, MainTab activeTab) {
+  return switch (activeTab) {
+    MainTab.home => const _HomeAppBar(),
+    MainTab.standings => AppBar(
+      automaticallyImplyLeading: false,
+      title: const Text(AppStrings.standingsTitle),
+    ),
+    MainTab.compare => AppBar(
+      automaticallyImplyLeading: false,
+      title: const Text(AppStrings.teamCompareTitle),
+    ),
+    MainTab.favorites => AppBar(
+      automaticallyImplyLeading: false,
+      title: const Text(AppStrings.favoritesTitle),
+    ),
+    MainTab.predictions => AppBar(
+      automaticallyImplyLeading: false,
+      title: const Text(AppStrings.gameInsightLabTitle),
+    ),
+  };
+}
+
+class _HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
+  const _HomeAppBar();
+
+  static const int _calendarYearsBack = 1;
+  static const int _calendarYearsForward = 1;
+
+  @override
+  Size get preferredSize => const Size.fromHeight(kToolbarHeight);
+
+  @override
+  Widget build(BuildContext context) {
+    return AppBar(
+      automaticallyImplyLeading: false,
+      title: const Text(AppStrings.liveScoresTitle),
+      actions: [
+        IconButton(
+          onPressed: () => unawaited(_openCalendar(context)),
+          icon: SvgPicture.asset(
+            AppIcons.calendar,
+            colorFilter: const ColorFilter.mode(
+              AppColors.textBlack,
+              BlendMode.srcIn,
+            ),
+          ),
+          tooltip: AppStrings.openCalendar,
+        ),
+        IconButton(
+          onPressed: () => Navigator.of(context).pushNamed(AppRoutes.settings),
+          icon: SvgPicture.asset(
+            AppIcons.settings,
+            colorFilter: const ColorFilter.mode(
+              AppColors.textBlack,
+              BlendMode.srcIn,
+            ),
+          ),
+          tooltip: AppStrings.openSettings,
+        ),
+      ],
+    );
+  }
+
+  Future<void> _openCalendar(BuildContext context) async {
+    final now = DateTime.now();
+    final initial =
+        DateTime.tryParse(
+          context.read<HomeProvider>().activeDateYyyyMmDd ?? '',
+        ) ??
+        now;
+    final picked = await showDatePicker(
+      context: context,
+      initialDate: initial,
+      firstDate: DateTime(now.year - _calendarYearsBack),
+      lastDate: DateTime(now.year + _calendarYearsForward),
+    );
+    if (picked == null || !context.mounted) return;
+
+    final yyyy = picked.year.toString().padLeft(4, '0');
+    final mm = picked.month.toString().padLeft(2, '0');
+    final dd = picked.day.toString().padLeft(2, '0');
+    await context.read<HomeProvider>().loadByDate('$yyyy-$mm-$dd');
   }
 }
 

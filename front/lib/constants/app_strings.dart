@@ -39,11 +39,31 @@ class AppStrings {
   static const String subtabGoals = 'Goals';
   static const String subtabShots = 'Shots';
   static const String subtabHits = 'Hits';
+  static const String faceoffs = 'Faceoffs';
   static const String tabStats = 'Stats';
   static const String tabRecap = 'Recap';
   static const String segmentHome = 'Home';
   static const String segmentGame = 'Game';
   static const String segmentAway = 'Away';
+  static const String intermission = 'Intermission';
+  static const String sog = 'SOG';
+  static const String noEvents = 'No events';
+  static const String notAvailable = '—';
+
+  static const String player = 'Player';
+  static const String statsSkaters = 'Skaters';
+  static const String statsGoalies = 'Goalies';
+
+  static const String statSog = 'SOG';
+  static const String statFoPct = 'FO%';
+  static const String statPpPct = 'PP%';
+  static const String statPkPct = 'PK%';
+  static const String statHits = 'Hits';
+  static const String statBlocks = 'Blocks';
+  static const String statGiveaways = 'Giveaways';
+  static const String statTakeaways = 'Takeaways';
+  static const String statSa = 'SA';
+  static const String statGa = 'GA';
   static const String scoreByPeriod = 'Score by period';
   static const String specialTeams = 'Special teams:';
   static const String highlightsSummary = 'Highlights summary';

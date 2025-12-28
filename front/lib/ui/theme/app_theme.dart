@@ -23,6 +23,7 @@ ThemeData appTheme() {
       bodyMedium: AppFonts.bodyRegular,
       bodySmall: AppFonts.caption,
       labelLarge: AppFonts.bodySemibold,
+      labelMedium: AppFonts.labelMedium,
       labelSmall: AppFonts.captionSemibold,
     ),
     appBarTheme: const AppBarTheme(
@@ -30,7 +31,6 @@ ThemeData appTheme() {
       foregroundColor: AppColors.textBlack,
       elevation: 0,
     ),
-    // 👇 SWITCH THEME
     switchTheme: SwitchThemeData(
       thumbColor: WidgetStateProperty.resolveWith((states) {
         return Colors.white;
@@ -50,6 +50,16 @@ ThemeData appTheme() {
         }
         return AppColors.borderGray;
       }),
+    ),
+    datePickerTheme: DatePickerThemeData(
+      backgroundColor: Colors.white,
+      headerBackgroundColor: AppColors.primaryRed,
+      headerForegroundColor: Colors.white,
+      todayForegroundColor: WidgetStateProperty.all(AppColors.primaryRed),
+      dayForegroundColor: WidgetStateProperty.all(AppColors.textBlack),
+      dayOverlayColor: WidgetStateProperty.all(
+        AppColors.primaryRed.withValues(alpha: 0.1),
+      ),
     ),
   );
 }

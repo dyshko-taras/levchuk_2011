@@ -12,7 +12,7 @@ class AppSizes {
 
   static const double primaryButtonHeight = 47.52;
 
-  static const double segmentedControlHeight = 47.52;
+  static const double segmentedControlHeight = 50;
   static const double segmentedControlMinSegmentWidth = 103.29;
 
   static const double bottomNavHeight = 59.4;

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import 'package:ice_line_tracker/ui/theme/app_colors.dart';
 
 class AppFonts {
@@ -62,6 +61,13 @@ class AppFonts {
     fontSize: 15.84,
     fontWeight: FontWeight.w700,
     color: AppColors.textBlack,
+  );
+
+  static const TextStyle labelMedium = TextStyle(
+    fontFamily: familyOpenSans,
+    fontSize: 13,
+    fontWeight: FontWeight.w800,
+    color: AppColors.textGray,
   );
 
   static const TextStyle caption = TextStyle(
