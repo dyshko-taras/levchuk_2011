@@ -11,11 +11,14 @@ import 'package:ice_line_tracker/constants/app_spacing.dart';
 import 'package:ice_line_tracker/constants/app_strings.dart';
 import 'package:ice_line_tracker/data/local/prefs_store.dart';
 import 'package:ice_line_tracker/providers/settings_provider.dart';
+import 'package:ice_line_tracker/services/notification_service.dart';
 import 'package:ice_line_tracker/ui/theme/app_colors.dart';
 import 'package:ice_line_tracker/ui/theme/app_fonts.dart';
 import 'package:ice_line_tracker/ui/theme/app_gradients.dart';
+import 'package:ice_line_tracker/ui/widgets/buttons/primary_button.dart';
 import 'package:ice_line_tracker/ui/widgets/fields/app_segmented_control.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 
 class SettingsPage extends StatefulWidget {
@@ -79,22 +82,16 @@ class _SettingsPageState extends State<SettingsPage> {
           const Text(AppStrings.notifications, style: AppFonts.heading2),
           Gaps.hSm,
           _SwitchRow(
-            label: AppStrings.goalAlerts,
-            value: settings.goalAlertsEnabled,
-            onChanged: (v) =>
-                unawaited(settings.setGoalAlertsEnabled(enabled: v)),
-          ),
-          _SwitchRow(
             label: AppStrings.finalAlerts,
             value: settings.finalAlertsEnabled,
-            onChanged: (v) =>
-                unawaited(settings.setFinalAlertsEnabled(enabled: v)),
+            onChanged: (v) => unawaited(
+              _onFinalAlertsChanged(context, v),
+            ),
           ),
-          _SwitchRow(
-            label: AppStrings.preGameReminders,
-            value: settings.preGameRemindersEnabled,
-            onChanged: (v) =>
-                unawaited(settings.setPreGameRemindersEnabled(enabled: v)),
+          Gaps.hMd,
+          PrimaryButton(
+            label: AppStrings.testNotification,
+            onPressed: () => unawaited(_onTestNotificationPressed(context)),
           ),
           Gaps.hXl,
           const Text(AppStrings.appSection, style: AppFonts.heading2),
@@ -134,6 +131,31 @@ class _SettingsPageState extends State<SettingsPage> {
         ],
       ),
     );
+  }
+
+  Future<void> _onFinalAlertsChanged(BuildContext context, bool enabled) async {
+    final settings = context.read<SettingsProvider>();
+    if (!enabled) {
+      await settings.setFinalAlertsEnabled(enabled: false);
+      return;
+    }
+
+    final notifications = context.read<NotificationService>();
+    final granted = await notifications.ensureNotificationPermission();
+    if (!granted && context.mounted) {
+      await _showNotificationsPermissionDialog(context);
+      return;
+    }
+
+    await settings.setFinalAlertsEnabled(enabled: true);
+  }
+
+  Future<void> _onTestNotificationPressed(BuildContext context) async {
+    final notifications = context.read<NotificationService>();
+    final ok = await notifications.showTestFinalAlert();
+    if (!ok && context.mounted) {
+      await _showNotificationsPermissionDialog(context);
+    }
   }
 }
 
@@ -263,6 +285,28 @@ Future<void> _openAppVersion(BuildContext context, String version) async {
         title: const Text(AppStrings.appVersion),
         content: Text(version),
         actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text(AppStrings.ok),
+          ),
+        ],
+      );
+    },
+  );
+}
+
+Future<void> _showNotificationsPermissionDialog(BuildContext context) async {
+  await showDialog<void>(
+    context: context,
+    builder: (context) {
+      return AlertDialog(
+        title: const Text(AppStrings.notificationsPermissionTitle),
+        content: const Text(AppStrings.notificationsPermissionBody),
+        actions: [
+          TextButton(
+            onPressed: () => unawaited(openAppSettings()),
+            child: const Text(AppStrings.openSystemSettings),
+          ),
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
             child: const Text(AppStrings.ok),

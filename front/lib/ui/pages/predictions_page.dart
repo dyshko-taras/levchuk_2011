@@ -8,6 +8,8 @@ import 'package:ice_line_tracker/constants/app_routes.dart';
 import 'package:ice_line_tracker/constants/app_sizes.dart';
 import 'package:ice_line_tracker/constants/app_spacing.dart';
 import 'package:ice_line_tracker/constants/app_strings.dart';
+import 'package:ice_line_tracker/data/local/favorites_store.dart';
+import 'package:ice_line_tracker/providers/favorites_provider.dart';
 import 'package:ice_line_tracker/providers/predictions_provider.dart';
 import 'package:ice_line_tracker/ui/theme/app_colors.dart';
 import 'package:ice_line_tracker/ui/theme/app_fonts.dart';
@@ -18,7 +20,7 @@ import 'package:ice_line_tracker/utils/async_state.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:provider/provider.dart';
 
-class PredictionsPage extends StatefulWidget {
+class PredictionsPage extends StatefulWidget { 
   const PredictionsPage({super.key});
 
   @override
@@ -32,7 +34,7 @@ class _PredictionsPageState extends State<PredictionsPage> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
       unawaited(context.read<PredictionsProvider>().loadNow());
-    });
+    }); 
   }
 
   @override
@@ -431,10 +433,29 @@ class _PredictionDetails extends StatelessWidget {
                 );
               },
             ),
+            Gaps.hMd,
+            _OutlinedPrimaryButton(
+              label: AppStrings.watchThisGame,
+              onPressed: () => unawaited(_watchThisGame(context)),
+            ),
           ],
         ),
       ),
     );
+  }
+
+  Future<void> _watchThisGame(BuildContext context) async {
+    final favorites = context.read<FavoritesProvider>();
+    final g = prediction.game;
+    await favorites.toggleFavoriteGame(g.id, game: g);
+    await favorites.setGameAlertEnabled(
+      g.id,
+      GameAlertType.final_,
+      enabled: true,
+      game: g,
+    );
+    if (!context.mounted) return;
+    Navigator.of(context).pop();
   }
 }
 

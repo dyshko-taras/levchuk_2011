@@ -38,6 +38,7 @@ class App extends StatelessWidget {
         Provider.value(value: dependencies.prefsStore),
         Provider.value(value: dependencies.favoritesStore),
         Provider.value(value: dependencies.diskCache),
+        Provider.value(value: dependencies.notificationService),
         Provider.value(value: dependencies.cachedBootstrapRepository),
         Provider.value(value: dependencies.cachedScheduleRepository),
         Provider.value(value: dependencies.cachedStandingsRepository),
@@ -45,7 +46,10 @@ class App extends StatelessWidget {
         Provider.value(value: dependencies.cachedTeamRepository),
         Provider.value(value: dependencies.playerRepository),
         ChangeNotifierProvider(
-          create: (_) => PrefsProvider(dependencies.prefsStore),
+          create: (_) => PrefsProvider(
+            dependencies.prefsStore,
+            dependencies.notificationService,
+          ),
         ),
         ChangeNotifierProvider(
           create: (_) => AppStartupProvider(
@@ -57,10 +61,16 @@ class App extends StatelessWidget {
           create: (_) => ShellNavigationProvider(),
         ),
         ChangeNotifierProvider(
-          create: (_) => FavoritesProvider(dependencies.favoritesStore),
+          create: (_) => FavoritesProvider(
+            dependencies.favoritesStore,
+            dependencies.notificationService,
+          ),
         ),
         ChangeNotifierProvider(
-          create: (_) => SettingsProvider(dependencies.prefsStore),
+          create: (_) => SettingsProvider(
+            dependencies.prefsStore,
+            dependencies.notificationService,
+          ),
         ),
         ChangeNotifierProvider(
           create: (_) => HomeProvider(

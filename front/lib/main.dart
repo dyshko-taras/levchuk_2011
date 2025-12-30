@@ -25,6 +25,7 @@ import 'package:ice_line_tracker/data/repositories/player_repository.dart';
 import 'package:ice_line_tracker/data/repositories/schedule_repository.dart';
 import 'package:ice_line_tracker/data/repositories/standings_repository.dart';
 import 'package:ice_line_tracker/data/repositories/team_repository.dart';
+import 'package:ice_line_tracker/services/notification_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 bool _isDevicePreviewAvailable() => kDebugMode;
@@ -36,6 +37,13 @@ Future<void> main() async {
   final prefsStore = PrefsStore(sharedPrefs);
   final favoritesStore = FavoritesStore(sharedPrefs);
   final diskCache = await HiveJsonCache.open();
+
+  final notificationService = NotificationService(
+    prefsStore: prefsStore,
+    favoritesStore: favoritesStore,
+  );
+  await notificationService.initializeCore();
+  await notificationService.syncFinalAlerts();
 
   final apiClient = ApiClient();
 
@@ -93,6 +101,7 @@ Future<void> main() async {
           prefsStore: prefsStore,
           favoritesStore: favoritesStore,
           diskCache: diskCache,
+          notificationService: notificationService,
           cachedBootstrapRepository: cachedBootstrapRepository,
           cachedScheduleRepository: cachedScheduleRepository,
           cachedStandingsRepository: cachedStandingsRepository,

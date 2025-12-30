@@ -1,8 +1,9 @@
 import 'package:flutter/foundation.dart';
 import 'package:ice_line_tracker/data/local/prefs_store.dart';
+import 'package:ice_line_tracker/services/notification_service.dart';
 
 class SettingsProvider extends ChangeNotifier {
-  SettingsProvider(this._prefs) {
+  SettingsProvider(this._prefs, this._notifications) {
     _defaultDatePreset = _prefs.getDefaultDatePreset();
     _pushAlertsEnabled = _prefs.getPushAlertsEnabled();
     _goalAlertsEnabled = _prefs.getGoalAlertsEnabled();
@@ -12,6 +13,7 @@ class SettingsProvider extends ChangeNotifier {
   }
 
   final PrefsStore _prefs;
+  final NotificationService _notifications;
 
   late DefaultDatePreset _defaultDatePreset;
   DefaultDatePreset get defaultDatePreset => _defaultDatePreset;
@@ -30,6 +32,16 @@ class SettingsProvider extends ChangeNotifier {
 
   late bool _devicePreviewEnabled;
   bool get devicePreviewEnabled => _devicePreviewEnabled;
+
+  void reloadFromPrefs() {
+    _defaultDatePreset = _prefs.getDefaultDatePreset();
+    _pushAlertsEnabled = _prefs.getPushAlertsEnabled();
+    _goalAlertsEnabled = _prefs.getGoalAlertsEnabled();
+    _finalAlertsEnabled = _prefs.getFinalAlertsEnabled();
+    _preGameRemindersEnabled = _prefs.getPreGameRemindersEnabled();
+    _devicePreviewEnabled = _prefs.getDevicePreviewEnabled();
+    notifyListeners();
+  }
 
   Future<void> setDefaultDatePreset(DefaultDatePreset preset) async {
     if (_defaultDatePreset == preset) return;
@@ -57,6 +69,7 @@ class SettingsProvider extends ChangeNotifier {
     _finalAlertsEnabled = enabled;
     notifyListeners();
     await _prefs.setFinalAlertsEnabled(value: enabled);
+    await _notifications.syncFinalAlerts();
   }
 
   Future<void> setPreGameRemindersEnabled({required bool enabled}) async {

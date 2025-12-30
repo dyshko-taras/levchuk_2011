@@ -7,10 +7,12 @@ import 'package:ice_line_tracker/constants/app_spacing.dart';
 import 'package:ice_line_tracker/constants/app_strings.dart';
 import 'package:ice_line_tracker/data/local/prefs_store.dart';
 import 'package:ice_line_tracker/providers/prefs_provider.dart';
+import 'package:ice_line_tracker/providers/settings_provider.dart';
 import 'package:ice_line_tracker/ui/theme/app_colors.dart';
 import 'package:ice_line_tracker/ui/theme/app_fonts.dart';
 import 'package:ice_line_tracker/ui/widgets/buttons/primary_button.dart';
 import 'package:ice_line_tracker/ui/widgets/fields/app_segmented_control.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 
 class WelcomePage extends StatefulWidget {
@@ -81,11 +83,11 @@ class _WelcomePageState extends State<WelcomePage> {
                             ),
                           ),
                           Switch.adaptive(
-                            value: prefs.draftPushAlertsEnabled,
+                            value: prefs.draftFinalAlertsEnabled,
                             onChanged: prefs.saving
                                 ? null
-                                : (v) => prefs.setDraftPushAlertsEnabled(
-                                    enabled: v,
+                                : (v) => unawaited(
+                                    _onFinalAlertsChanged(context, v),
                                   ),
                           ),
                         ],
@@ -117,7 +119,16 @@ class _WelcomePageState extends State<WelcomePage> {
     await prefs.completeWelcome();
 
     if (!mounted) return;
+    context.read<SettingsProvider>().reloadFromPrefs();
     await Navigator.of(context).pushReplacementNamed(AppRoutes.home);
+  }
+
+  Future<void> _onFinalAlertsChanged(BuildContext context, bool enabled) async {
+    final prefs = context.read<PrefsProvider>();
+    final ok = await prefs.setDraftFinalAlertsEnabled(enabled: enabled);
+    if (!ok && context.mounted) {
+      await _showNotificationsPermissionDialog(context);
+    }
   }
 }
 
@@ -203,4 +214,26 @@ class _WelcomeHero extends StatelessWidget {
       ),
     );
   }
+}
+
+Future<void> _showNotificationsPermissionDialog(BuildContext context) async {
+  await showDialog<void>(
+    context: context,
+    builder: (context) {
+      return AlertDialog(
+        title: const Text(AppStrings.notificationsPermissionTitle),
+        content: const Text(AppStrings.notificationsPermissionBody),
+        actions: [
+          TextButton(
+            onPressed: () => unawaited(openAppSettings()),
+            child: const Text(AppStrings.openSystemSettings),
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text(AppStrings.ok),
+          ),
+        ],
+      );
+    },
+  );
 }

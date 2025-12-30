@@ -52,7 +52,6 @@ class GameCard extends StatelessWidget {
     final favorites = context.watch<FavoritesProvider>();
     final isFavorite = favorites.isFavoriteGame(game.id);
     final alertsEnabled =
-        favorites.getGameAlertEnabled(game.id, GameAlertType.goals) ||
         favorites.getGameAlertEnabled(game.id, GameAlertType.final_);
 
     return Material(
@@ -143,7 +142,7 @@ class GameCard extends StatelessWidget {
                       alertsEnabled: alertsEnabled,
                       favoriteEnabled: isFavorite,
                       onToggleAlerts: () => unawaited(
-                        _toggleAlerts(favorites, game.id, alertsEnabled),
+                        _toggleFinalAlert(favorites, game, alertsEnabled),
                       ),
                       onToggleFavorite: () =>
                           unawaited(
@@ -159,7 +158,7 @@ class GameCard extends StatelessWidget {
                     alertsEnabled: alertsEnabled,
                     favoriteEnabled: isFavorite,
                     onToggleAlerts: () => unawaited(
-                      _toggleAlerts(favorites, game.id, alertsEnabled),
+                      _toggleFinalAlert(favorites, game, alertsEnabled),
                     ),
                     onToggleFavorite: () =>
                         unawaited(
@@ -174,21 +173,17 @@ class GameCard extends StatelessWidget {
     );
   }
 
-  Future<void> _toggleAlerts(
+  Future<void> _toggleFinalAlert(
     FavoritesProvider favorites,
-    int gameId,
+    NhlScheduledGame game,
     bool currentlyEnabled,
   ) async {
     final next = !currentlyEnabled;
     await favorites.setGameAlertEnabled(
-      gameId,
-      GameAlertType.goals,
-      enabled: next,
-    );
-    await favorites.setGameAlertEnabled(
-      gameId,
+      game.id,
       GameAlertType.final_,
       enabled: next,
+      game: game,
     );
   }
 

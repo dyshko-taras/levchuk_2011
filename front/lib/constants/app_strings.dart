@@ -13,7 +13,7 @@ class AppStrings {
   static const String today = 'Today';
   static const String yesterday = 'Yesterday';
   static const String tomorrow = 'Tomorrow';
-  static const String welcomePushAlertsLabel = 'Push alerts for goals & finals';
+  static const String welcomePushAlertsLabel = 'Final alerts notifications';
   static const String welcomePushAlertsHelper =
       'You can change this anytime in Settings.';
   static const String getStarted = 'Get Started';
@@ -160,6 +160,12 @@ class AppStrings {
   static const String goalAlerts = 'Goal alerts';
   static const String finalAlerts = 'Final alerts';
   static const String preGameReminders = 'Pre-game reminders';
+  static const String notificationsPermissionTitle = 'Notifications disabled';
+  static const String notificationsPermissionBody =
+      'Please allow notifications for this app in system settings.';
+  static const String openSystemSettings = 'Open settings';
+  static const String testNotification = 'Test notification';
+  static const String testNotificationBody = 'Test: notifications are working.';
   static const String appSection = 'App';
   static const String poweredByNhlStatsApiV1 = 'Powered by NHL Stats API v1';
   static const String appVersion = 'App version';

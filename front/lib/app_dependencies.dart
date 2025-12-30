@@ -7,12 +7,14 @@ import 'package:ice_line_tracker/data/repositories/cached_standings_repository.d
 import 'package:ice_line_tracker/data/repositories/cached_team_repository.dart';
 import 'package:ice_line_tracker/data/repositories/game_center_repository.dart';
 import 'package:ice_line_tracker/data/repositories/player_repository.dart';
+import 'package:ice_line_tracker/services/notification_service.dart';
 
 class AppDependencies {
   const AppDependencies({
     required this.prefsStore,
     required this.favoritesStore,
     required this.diskCache,
+    required this.notificationService,
     required this.cachedBootstrapRepository,
     required this.cachedScheduleRepository,
     required this.cachedStandingsRepository,
@@ -24,6 +26,7 @@ class AppDependencies {
   final PrefsStore prefsStore;
   final FavoritesStore favoritesStore;
   final HiveJsonCache diskCache;
+  final NotificationService notificationService;
   final CachedBootstrapRepository cachedBootstrapRepository;
   final CachedScheduleRepository cachedScheduleRepository;
   final CachedStandingsRepository cachedStandingsRepository;

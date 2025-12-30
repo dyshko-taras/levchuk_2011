@@ -303,10 +303,6 @@ class _FavoriteGameCard extends StatelessWidget {
         ? AppStrings.notAvailable
         : _formatDateTimeLocal(g.startTimeUTC) ?? AppStrings.notAvailable;
 
-    final bellGoals = favorites.getGameAlertEnabled(
-      gameId,
-      GameAlertType.goals,
-    );
     final bellFinal = favorites.getGameAlertEnabled(
       gameId,
       GameAlertType.final_,
@@ -372,36 +368,17 @@ class _FavoriteGameCard extends StatelessWidget {
               Gaps.hXs,
               Text(dateTime, style: Theme.of(context).textTheme.bodyLarge),
               Gaps.hMd,
-              Row(
-                children: [
-                  Expanded(
-                    child: _NotificationToggle(
-                      label: AppStrings.bellGoals,
-                      value: bellGoals,
-                      onChanged: (enabled) => unawaited(
-                        favorites.setGameAlertEnabled(
-                          gameId,
-                          GameAlertType.goals,
-                          enabled: enabled,
-                        ),
-                      ),
-                    ),
+              _NotificationToggle(
+                label: AppStrings.bellFinal,
+                value: bellFinal,
+                onChanged: (enabled) => unawaited(
+                  favorites.setGameAlertEnabled(
+                    gameId,
+                    GameAlertType.final_,
+                    enabled: enabled,
+                    game: g,
                   ),
-                  Gaps.wLg,
-                  Expanded(
-                    child: _NotificationToggle(
-                      label: AppStrings.bellFinal,
-                      value: bellFinal,
-                      onChanged: (enabled) => unawaited(
-                        favorites.setGameAlertEnabled(
-                          gameId,
-                          GameAlertType.final_,
-                          enabled: enabled,
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
+                ),
               ),
               Gaps.hMd,
               Align(
