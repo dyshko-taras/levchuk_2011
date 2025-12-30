@@ -132,6 +132,7 @@ class AppStrings {
   static const String removeFromFavoritesQuestion = 'Remove from favorites?';
   static const String yes = 'Yes';
   static const String no = 'No';
+  static const String ok = 'OK';
   static const String gameStatusLive = 'Live';
   static const String gameStatusFinal = 'Final';
   static const String gameStatusScheduled = 'Scheduled';
@@ -164,6 +165,7 @@ class AppStrings {
   static const String appVersion = 'App version';
   static const String openSourceLicenses = 'Open source licenses';
   static const String devicePreview = 'Device preview';
+  static const String settingsVersionLabel = 'v{version} ({build})';
 
   static const String gameInsightLabTitle = 'Game Insight Lab';
   static const String custom = 'Custom';

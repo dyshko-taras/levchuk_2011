@@ -19,6 +19,7 @@ dependencies:
   hive_ce: ^2.16.0
   hive_ce_flutter: ^2.3.3
   json_annotation: ^4.9.0
+  package_info_plus: ^8.3.0
   percent_indicator: ^4.2.5
   provider: ^6.1.5
   retrofit: 4.7.3
