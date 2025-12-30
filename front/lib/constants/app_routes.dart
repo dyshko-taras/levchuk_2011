@@ -2,6 +2,7 @@ import 'package:flutter/widgets.dart';
 import 'package:ice_line_tracker/enums/main_tab.dart';
 import 'package:ice_line_tracker/ui/pages/game_center_page.dart';
 import 'package:ice_line_tracker/ui/pages/main_shell_page.dart';
+import 'package:ice_line_tracker/ui/pages/player_page.dart';
 import 'package:ice_line_tracker/ui/pages/settings_page.dart';
 import 'package:ice_line_tracker/ui/pages/splash_page.dart';
 import 'package:ice_line_tracker/ui/pages/team_page.dart';
@@ -61,5 +62,6 @@ class AppRoutes {
     settings: (_) => const SettingsPage(),
     gameCenter: (_) => const GameCenterPage(),
     team: (_) => const TeamPage(),
+    player: (_) => const PlayerPage(),
   };
 }

@@ -103,19 +103,22 @@
     - [x] Recap (score by period, special teams, highlights summary, broadcasters, Share)
   - [ ] Навігація: перехід на `TeamPage`/`PlayerPage` з відповідних елементів.
 
-- [ ] **Фаза 8 — Standings**
-  - [ ] API: `GET /standings/now` (+ режим “by date” якщо потрібно для UI).
-  - [ ] UI: scope segmented control (Wild Card / League / Division) + scrollable table (колонки як у tech spec).
-  - [ ] Derived/presentation логіка (сортування/групування/лейаути) згідно tech spec.
-  - [ ] Навігація: відкриття `TeamPage` зі standings.
+- [x] **Фаза 8 — Standings**
+  - [x] API: `GET /standings/now` (+ режим “by date” якщо потрібно для UI).
+  - [x] UI: scope segmented control (Wild Card / League / Division) + scrollable table (колонки як у tech spec).
+  - [x] Derived/presentation логіка (сортування/групування/лейаути) згідно tech spec.
+  - [x] Навігація: відкриття `TeamPage` зі standings.
 
-- [ ] **Фаза 9 — Team Page**
-  - [ ] Header з ключовими даними, favorite/notifications.
-  - [ ] Tabs:
-    - [ ] Roster (групування, перехід на Player)
-    - [ ] Schedule (список ігор, перехід на Game Center)
-    - [ ] Team Stats (карточки з метриками, CTA “Highlight upcoming”)
-  - [ ] Врахувати кешування/обмеження API з tech spec.
+- [x] **Фаза 9 — Team Page**
+  - [x] Header з ключовими даними, favorite/notifications.
+  - [x] Tabs:
+    - [x] Roster
+      - [x] Перехід на Player
+    - [x] Schedule
+      - [x] Список ігор
+      - [x] Перехід на Game Center (не потрібно)
+    - [x] Team Stats (карточки з метриками, CTA “Highlight upcoming”)
+  - [x] Врахувати кешування/обмеження API з tech spec.
 
 - [ ] **Фаза 10 — Player Page**
   - [ ] API: профіль/overview + game log (для графіка “Points by game”).

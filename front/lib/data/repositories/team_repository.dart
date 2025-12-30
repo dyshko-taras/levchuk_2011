@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:ice_line_tracker/data/api/api_exception.dart';
+import 'package:ice_line_tracker/data/api/nhl_club_schedule_service.dart';
 import 'package:ice_line_tracker/data/api/nhl_club_stats_service.dart';
 import 'package:ice_line_tracker/data/api/nhl_roster_service.dart';
 
@@ -7,11 +8,14 @@ class TeamRepository {
   TeamRepository({
     required NhlRosterService rosterService,
     required NhlClubStatsService clubStatsService,
+    required NhlClubScheduleService clubScheduleService,
   }) : _rosterService = rosterService,
-       _clubStatsService = clubStatsService;
+       _clubStatsService = clubStatsService,
+       _clubScheduleService = clubScheduleService;
 
   final NhlRosterService _rosterService;
   final NhlClubStatsService _clubStatsService;
+  final NhlClubScheduleService _clubScheduleService;
 
   Future<Object?> getRosterCurrent(String teamAbbrev) async {
     try {
@@ -51,6 +55,14 @@ class TeamRepository {
         seasonId,
         gameTypeId,
       );
+    } on DioException catch (exception) {
+      throw ApiException.fromDioException(exception);
+    }
+  }
+
+  Future<Object?> getClubScheduleSeasonNow(String teamAbbrev) async {
+    try {
+      return await _clubScheduleService.getClubScheduleSeasonNow(teamAbbrev);
     } on DioException catch (exception) {
       throw ApiException.fromDioException(exception);
     }

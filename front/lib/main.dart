@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:ice_line_tracker/app.dart';
 import 'package:ice_line_tracker/app_dependencies.dart';
 import 'package:ice_line_tracker/data/api/api_client.dart';
+import 'package:ice_line_tracker/data/api/nhl_club_schedule_service.dart';
 import 'package:ice_line_tracker/data/api/nhl_club_stats_service.dart';
 import 'package:ice_line_tracker/data/api/nhl_gamecenter_service.dart';
 import 'package:ice_line_tracker/data/api/nhl_player_service.dart';
@@ -18,6 +19,7 @@ import 'package:ice_line_tracker/data/repositories/bootstrap_repository.dart';
 import 'package:ice_line_tracker/data/repositories/cached_bootstrap_repository.dart';
 import 'package:ice_line_tracker/data/repositories/cached_schedule_repository.dart';
 import 'package:ice_line_tracker/data/repositories/cached_standings_repository.dart';
+import 'package:ice_line_tracker/data/repositories/cached_team_repository.dart';
 import 'package:ice_line_tracker/data/repositories/game_center_repository.dart';
 import 'package:ice_line_tracker/data/repositories/player_repository.dart';
 import 'package:ice_line_tracker/data/repositories/schedule_repository.dart';
@@ -68,6 +70,11 @@ Future<void> main() async {
   final teamRepository = TeamRepository(
     rosterService: NhlRosterService(apiClient.dio),
     clubStatsService: NhlClubStatsService(apiClient.dio),
+    clubScheduleService: NhlClubScheduleService(apiClient.dio),
+  );
+  final cachedTeamRepository = CachedTeamRepository(
+    remote: teamRepository,
+    diskCache: diskCache,
   );
   final playerRepository = PlayerRepository(
     service: NhlPlayerService(apiClient.dio),
@@ -90,7 +97,7 @@ Future<void> main() async {
           cachedScheduleRepository: cachedScheduleRepository,
           cachedStandingsRepository: cachedStandingsRepository,
           gameCenterRepository: gameCenterRepository,
-          teamRepository: teamRepository,
+          cachedTeamRepository: cachedTeamRepository,
           playerRepository: playerRepository,
         ),
       ),

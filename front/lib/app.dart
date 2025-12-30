@@ -42,7 +42,7 @@ class App extends StatelessWidget {
         Provider.value(value: dependencies.cachedScheduleRepository),
         Provider.value(value: dependencies.cachedStandingsRepository),
         Provider.value(value: dependencies.gameCenterRepository),
-        Provider.value(value: dependencies.teamRepository),
+        Provider.value(value: dependencies.cachedTeamRepository),
         Provider.value(value: dependencies.playerRepository),
         ChangeNotifierProvider(
           create: (_) => PrefsProvider(dependencies.prefsStore),
@@ -82,7 +82,8 @@ class App extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (_) => TeamProvider(
-            repository: dependencies.teamRepository,
+            repository: dependencies.cachedTeamRepository,
+            standings: dependencies.cachedStandingsRepository,
           ),
         ),
         ChangeNotifierProvider(

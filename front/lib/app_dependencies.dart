@@ -4,9 +4,9 @@ import 'package:ice_line_tracker/data/local/prefs_store.dart';
 import 'package:ice_line_tracker/data/repositories/cached_bootstrap_repository.dart';
 import 'package:ice_line_tracker/data/repositories/cached_schedule_repository.dart';
 import 'package:ice_line_tracker/data/repositories/cached_standings_repository.dart';
+import 'package:ice_line_tracker/data/repositories/cached_team_repository.dart';
 import 'package:ice_line_tracker/data/repositories/game_center_repository.dart';
 import 'package:ice_line_tracker/data/repositories/player_repository.dart';
-import 'package:ice_line_tracker/data/repositories/team_repository.dart';
 
 class AppDependencies {
   const AppDependencies({
@@ -17,7 +17,7 @@ class AppDependencies {
     required this.cachedScheduleRepository,
     required this.cachedStandingsRepository,
     required this.gameCenterRepository,
-    required this.teamRepository,
+    required this.cachedTeamRepository,
     required this.playerRepository,
   });
 
@@ -28,6 +28,6 @@ class AppDependencies {
   final CachedScheduleRepository cachedScheduleRepository;
   final CachedStandingsRepository cachedStandingsRepository;
   final GameCenterRepository gameCenterRepository;
-  final TeamRepository teamRepository;
+  final CachedTeamRepository cachedTeamRepository;
   final PlayerRepository playerRepository;
 }
