@@ -174,6 +174,8 @@ class AppStrings {
   static const String keyMatchups = 'Key Matchups';
   static const String filterByTeam = 'Filter by team';
   static const String highConfidence = 'High confidence';
+  static const String moderateConfidence = 'Moderate';
+  static const String lowConfidence = 'Low';
   static const String awayAtHome = 'AWAY @ HOME';
   static const String projectedWinner = 'Projected winner:';
   static const String expectedTotal = 'Expected total:';

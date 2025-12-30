@@ -161,12 +161,12 @@
   - [x] App: “Powered by NHL Stats API v1”, версія, open-source licenses (якщо реалізовано).
   - [ ] Логіка: зміна toggle → перерахунок/перепланування локальних нотифікацій (не реалізовуємо поки).
 
-- [ ] **Фаза 14 — Predictions (Game Insight Lab)**
+- [x] **Фаза 14 — Predictions (Game Insight Lab)**
 
-  - [ ] UI: фільтри (Today/Tomorrow/Custom, All/My Favorites/Key Matchups, Filter by team), кнопка Refresh.
-  - [ ] Дані: schedule + standings (+ кеш boxscore/schedule якщо потрібно).
-  - [ ] Розрахунок: реалізувати алгоритм Win%/Confidence/Expected total за спрощеною формулою з tech spec.
-  - [ ] Details (bottom sheet): win probability, key factors, дисклеймер, actions “Open Game Center” та “Watch this game”.
+  - [x] UI: фільтри (Today/Tomorrow/Custom, All/My Favorites/Key Matchups, Filter by team), кнопка Refresh.
+  - [x] Дані: schedule + standings (+ кеш boxscore/schedule якщо потрібно).
+  - [x] Розрахунок: реалізувати алгоритм Win%/Confidence/Expected total за спрощеною формулою з tech spec.
+  - [x] Details (bottom sheet): win probability, key factors, дисклеймер, actions “Open Game Center” та “Watch this game”.
 
 - [ ] **Фаза 15 — Нотифікації (локальні)**
 

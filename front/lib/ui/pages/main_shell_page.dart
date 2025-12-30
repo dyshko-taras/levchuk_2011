@@ -11,11 +11,13 @@ import 'package:ice_line_tracker/constants/app_spacing.dart';
 import 'package:ice_line_tracker/constants/app_strings.dart';
 import 'package:ice_line_tracker/enums/main_tab.dart';
 import 'package:ice_line_tracker/providers/home_provider.dart';
+import 'package:ice_line_tracker/providers/predictions_provider.dart';
 import 'package:ice_line_tracker/providers/shell_navigation_provider.dart';
 import 'package:ice_line_tracker/providers/standings_provider.dart';
 import 'package:ice_line_tracker/ui/pages/compare_page.dart';
 import 'package:ice_line_tracker/ui/pages/favorites_page.dart';
 import 'package:ice_line_tracker/ui/pages/home_page.dart';
+import 'package:ice_line_tracker/ui/pages/predictions_page.dart';
 import 'package:ice_line_tracker/ui/pages/standings_page.dart';
 import 'package:ice_line_tracker/ui/theme/app_colors.dart';
 import 'package:ice_line_tracker/ui/theme/app_gradients.dart';
@@ -69,7 +71,7 @@ class _MainShellPageState extends State<MainShellPage> {
     final activeTab = shell.activeTab;
 
     return Scaffold(
-      extendBody: true,
+      // extendBody: true,
       appBar: _buildAppBar(context, activeTab),
       body: IndexedStack(
         index: shell.activeIndex,
@@ -78,7 +80,7 @@ class _MainShellPageState extends State<MainShellPage> {
           StandingsPage(),
           ComparePage(),
           FavoritesPage(),
-          Center(child: Text(AppStrings.gameInsightLabTitle)),
+          PredictionsPage(),
         ],
       ),
       bottomNavigationBar: Padding(
@@ -195,6 +197,21 @@ PreferredSizeWidget _buildAppBar(BuildContext context, MainTab activeTab) {
     MainTab.predictions => AppBar(
       automaticallyImplyLeading: false,
       title: const Text(AppStrings.gameInsightLabTitle),
+      actions: [
+        IconButton(
+          onPressed: () {
+            unawaited(context.read<PredictionsProvider>().refresh());
+          },
+          tooltip: AppStrings.refresh,
+          icon: SvgPicture.asset(
+            AppIcons.refresh,
+            colorFilter: const ColorFilter.mode(
+              AppColors.textBlack,
+              BlendMode.srcIn,
+            ),
+          ),
+        ),
+      ],
     ),
   };
 }

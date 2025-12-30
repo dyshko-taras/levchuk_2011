@@ -95,7 +95,12 @@ class App extends StatelessWidget {
           create: (_) => CompareProvider(),
         ),
         ChangeNotifierProvider(
-          create: (_) => PredictionsProvider(),
+          create: (_) => PredictionsProvider(
+            schedule: dependencies.cachedScheduleRepository,
+            standings: dependencies.cachedStandingsRepository,
+            teams: dependencies.cachedTeamRepository,
+            favoritesStore: dependencies.favoritesStore,
+          ),
         ),
       ],
       child: MaterialApp(
