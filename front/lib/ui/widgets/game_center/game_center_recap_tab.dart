@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:data_table_2/data_table_2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:ice_line_tracker/constants/app_sizes.dart';
@@ -10,16 +11,23 @@ import 'package:ice_line_tracker/ui/theme/app_fonts.dart';
 import 'package:ice_line_tracker/ui/widgets/buttons/primary_button.dart';
 import 'package:ice_line_tracker/ui/widgets/game_center/game_center_models.dart';
 import 'package:ice_line_tracker/ui/widgets/game_center/game_center_parsers.dart';
+import 'package:ice_line_tracker/utils/async_state.dart';
 
 class GameCenterRecapTab extends StatelessWidget {
   const GameCenterRecapTab({
     required this.header,
     required this.playByPlay,
+    required this.landing,
+    required this.landingState,
+    required this.onRetryLoadLanding,
     super.key,
   });
 
   final GameCenterHeader? header;
   final Map<String, Object?>? playByPlay;
+  final Map<String, Object?>? landing;
+  final AsyncState<Object?> landingState;
+  final VoidCallback onRetryLoadLanding;
 
   @override
   Widget build(BuildContext context) {
@@ -27,6 +35,14 @@ class GameCenterRecapTab extends StatelessWidget {
       playByPlay,
     ).where((p) => typeKey(p) == 'goal').toList();
     final byPeriod = scoreByPeriodFromGoals(header, goals);
+
+    final roster = rosterFromPlayByPlay(playByPlay);
+    final recap = recapSummaryFrom(
+      header: header,
+      playByPlay: playByPlay,
+      landing: landing,
+      roster: roster,
+    );
 
     return ListView(
       physics: const AlwaysScrollableScrollPhysics(),
@@ -61,32 +77,48 @@ class GameCenterRecapTab extends StatelessWidget {
             horizontal: AppSpacing.md,
             vertical: AppSpacing.md,
           ),
-          child: const Column(
+          child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              if (landingState.isLoading && landing == null)
+                const Center(child: CircularProgressIndicator())
+              else if (landingState.hasError && landing == null)
+                Column(
+                  children: [
+                    const Text(AppStrings.splashInitFailed),
+                    Gaps.hMd,
+                    ElevatedButton(
+                      onPressed: onRetryLoadLanding,
+                      child: const Text(AppStrings.refresh),
+                    ),
+                  ],
+                ),
               _RecapRow(
                 label: AppStrings.specialTeams,
-                value: AppStrings.notAvailable,
+                value: recap.specialTeams,
+                stackValue: true,
               ),
-              Gaps.hMd,
+              const Divider(height: AppSpacing.xl, color: AppColors.borderGray),
               _RecapRow(
                 label: AppStrings.highlightsSummary,
-                value: AppStrings.notAvailable,
+                value: recap.highlights,
+                stackValue: true,
               ),
-              Gaps.hMd,
+              const Divider(height: AppSpacing.xl, color: AppColors.borderGray),
               _RecapRow(
                 label: AppStrings.firstGoal,
-                value: AppStrings.notAvailable,
+                value: recap.firstGoal,
               ),
-              Gaps.hMd,
+              const Divider(height: AppSpacing.xl, color: AppColors.borderGray),
               _RecapRow(
                 label: AppStrings.gameWinningGoal,
-                value: AppStrings.notAvailable,
+                value: recap.gameWinningGoal,
               ),
-              Gaps.hMd,
+              const Divider(height: AppSpacing.xl, color: AppColors.borderGray),
               _RecapRow(
                 label: AppStrings.broadcasters,
-                value: AppStrings.notAvailable,
+                value: recap.broadcasters,
+                stackValue: true,
               ),
             ],
           ),
@@ -109,13 +141,37 @@ class GameCenterRecapTab extends StatelessWidget {
 }
 
 class _RecapRow extends StatelessWidget {
-  const _RecapRow({required this.label, required this.value});
+  const _RecapRow({
+    required this.label,
+    required this.value,
+    this.stackValue = false,
+  });
 
   final String label;
   final String value;
+  final bool stackValue;
+
+  static const int _stackThreshold = 24;
 
   @override
   Widget build(BuildContext context) {
+    final normalized = value == AppStrings.notAvailable ? '-' : value;
+    final shouldStack = stackValue || normalized.length > _stackThreshold;
+
+    if (shouldStack) {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            label,
+            style: AppFonts.bodySemibold.copyWith(color: AppColors.textBlack),
+          ),
+          Gaps.hXs,
+          Text(normalized, style: AppFonts.bodyRegular),
+        ],
+      );
+    }
+
     return Row(
       children: [
         Expanded(
@@ -124,7 +180,7 @@ class _RecapRow extends StatelessWidget {
             style: AppFonts.bodySemibold.copyWith(color: AppColors.textBlack),
           ),
         ),
-        Text(value, style: AppFonts.bodyRegular),
+        Text(normalized, style: AppFonts.bodyRegular),
       ],
     );
   }
@@ -145,52 +201,84 @@ class _ScoreByPeriodTable extends StatelessWidget {
   Widget build(BuildContext context) {
     const keys = ['1', '2', '3', 'OT', 'SO'];
 
-    return Table(
-      border: TableBorder.all(color: AppColors.borderGray),
-      columnWidths: const {
-        0: FixedColumnWidth(72),
-      },
-      children: [
-        TableRow(
-          children: [
-            const SizedBox(),
-            for (final k in keys)
-              Padding(
-                padding: Insets.allSm,
-                child: Text(
-                  k,
-                  style: AppFonts.captionSemibold.copyWith(
+    const headingRowHeight = 34.0;
+    const dataRowHeight = 38.0;
+    const extraHeight = 2.0;
+    const rowsCount = 2;
+    const tableHeight =
+        headingRowHeight + (dataRowHeight * rowsCount) + extraHeight;
+
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        const teamColumnWidth = 96.0;
+        const periodColumnWidth = 48.0;
+        final tableWidth =
+            teamColumnWidth +
+            (keys.length * periodColumnWidth) +
+            (keys.length * AppSpacing.sm) +
+            (AppSpacing.sm * 2);
+
+        return SizedBox(
+          height: tableHeight,
+          child: SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: SizedBox(
+                width: tableWidth,
+                child: DataTable2(
+                  minWidth: tableWidth,
+                  columnSpacing: AppSpacing.sm,
+                  horizontalMargin: AppSpacing.sm,
+                  headingRowHeight: headingRowHeight,
+                  dataRowHeight: dataRowHeight,
+                  border: TableBorder.all(color: AppColors.borderGray),
+                  headingTextStyle: AppFonts.captionSemibold.copyWith(
                     color: AppColors.textBlack,
                   ),
-                  textAlign: TextAlign.center,
+                  columns: [
+                    const DataColumn2(
+                      label: Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(AppStrings.teamTitle),
+                      ),
+                      fixedWidth: teamColumnWidth,
+                    ),
+                    for (final k in keys)
+                      DataColumn2(
+                        label: Center(child: Text(k)),
+                        numeric: true,
+                        fixedWidth: periodColumnWidth,
+                      ),
+                  ],
+                  rows: [
+                    _teamRow(awayAbbrev, keys, (p) => byPeriod[p]?.away),
+                    _teamRow(homeAbbrev, keys, (p) => byPeriod[p]?.home),
+                  ],
                 ),
               ),
-          ],
-        ),
-        _teamRow(awayAbbrev, keys, (p) => byPeriod[p]?.away),
-        _teamRow(homeAbbrev, keys, (p) => byPeriod[p]?.home),
-      ],
+            ),
+          ),
+        );
+      },
     );
   }
 
-  TableRow _teamRow(
+  DataRow2 _teamRow(
     String team,
     List<String> keys,
     int? Function(String) valueOf,
   ) {
-    return TableRow(
-      children: [
-        Padding(
-          padding: Insets.allSm,
-          child: Text(team, style: AppFonts.bodyRegular),
-        ),
+    return DataRow2(
+      cells: [
+        DataCell(Text(team, style: AppFonts.bodyRegular)),
         for (final k in keys)
-          Padding(
-            padding: Insets.allSm,
-            child: Text(
-              '${valueOf(k) ?? 0}',
-              style: AppFonts.bodyRegular,
-              textAlign: TextAlign.center,
+          DataCell(
+            Center(
+              child: Text(
+                '${valueOf(k) ?? 0}',
+                style: AppFonts.bodyRegular,
+              ),
             ),
           ),
       ],

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:ice_line_tracker/constants/app_radius.dart';
 import 'package:ice_line_tracker/constants/app_sizes.dart';
 import 'package:ice_line_tracker/constants/app_spacing.dart';
@@ -218,6 +219,18 @@ class _PlayCard extends StatelessWidget {
   final Map<String, Object?> play;
   final Map<int, RosterPlayer> roster;
 
+  String? _goalTeamLogoUrl() {
+    if (typeKey(play) != 'goal') return null;
+    final h = header;
+    if (h == null) return null;
+    final details = asMap(play['details']);
+    final teamId = asInt(details?['eventOwnerTeamId']);
+    if (teamId == null) return null;
+    if (teamId == h.homeTeamId) return h.homeLogoUrl;
+    if (teamId == h.awayTeamId) return h.awayLogoUrl;
+    return null;
+  }
+
   @override
   Widget build(BuildContext context) {
     final time = playTimeLabel(play);
@@ -225,18 +238,22 @@ class _PlayCard extends StatelessWidget {
     final title = playTitle(play);
     final subtitle = playSubtitle(play, roster);
 
-    return Container(
-      decoration: cardDecoration(),
-      padding: const EdgeInsets.symmetric(
-        horizontal: AppSpacing.md,
-        vertical: AppSpacing.md,
-      ),
-      child: Column(
+    final goalLogoUrl = _goalTeamLogoUrl();
+
+    Widget content() {
+      return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
-              Text(time, style: AppFonts.captionSemibold),
+              Container(
+                decoration: cardDecoration(),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: AppSpacing.md,
+                  vertical: AppSpacing.sm,
+                ),
+                child: Text(time, style: AppFonts.captionSemibold),
+              ),
               const Spacer(),
               if (score != null)
                 Text(
@@ -260,7 +277,25 @@ class _PlayCard extends StatelessWidget {
             Text(subtitle, style: Theme.of(context).textTheme.bodyLarge),
           ],
         ],
+      );
+    }
+
+    return Container(
+      decoration: cardDecoration(),
+      padding: const EdgeInsets.symmetric(
+        horizontal: AppSpacing.md,
+        vertical: AppSpacing.md,
       ),
+      child: goalLogoUrl == null || goalLogoUrl.isEmpty
+          ? content()
+          : Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _TeamLogo(url: goalLogoUrl),
+                Gaps.wMd,
+                Expanded(child: content()),
+              ],
+            ),
     );
   }
 }
@@ -357,6 +392,44 @@ class _StrengthBadge extends StatelessWidget {
           style: AppFonts.captionSemibold.copyWith(color: Colors.white),
         ),
       ),
+    );
+  }
+}
+
+class _TeamLogo extends StatelessWidget {
+  const _TeamLogo({required this.url});
+
+  final String url;
+
+  static const double _size = 64;
+
+  @override
+  Widget build(BuildContext context) {
+    final isSvg = url.toLowerCase().endsWith('.svg');
+    return SizedBox(
+      width: _size,
+      height: _size,
+      child: isSvg
+          ? SvgPicture.network(
+              url,
+              width: _size,
+              height: _size,
+              placeholderBuilder: (_) => const Center(
+                child: SizedBox(
+                  width: 14,
+                  height: 14,
+                  child: CircularProgressIndicator(strokeWidth: 2),
+                ),
+              ),
+            )
+          : Image.network(
+              url,
+              width: _size,
+              height: _size,
+              errorBuilder: (context, error, stackTrace) {
+                return const SizedBox.shrink();
+              },
+            ),
     );
   }
 }

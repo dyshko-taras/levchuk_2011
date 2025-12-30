@@ -74,6 +74,12 @@ class _GameCenterPageState extends State<GameCenterPage> {
     final pbpState = gameCenter.playByPlayState;
     final pbp = asMap(pbpState.valueOrNull);
 
+    final landingState = gameCenter.landingState;
+    final landing = asMap(landingState.valueOrNull);
+
+    final boxscoreState = gameCenter.boxscoreState;
+    final boxscore = asMap(boxscoreState.valueOrNull);
+
     final header = parseHeaderFromPlayByPlay(pbp);
 
     return Scaffold(
@@ -194,12 +200,23 @@ class _GameCenterPageState extends State<GameCenterPage> {
                   GameCenterTab.stats => GameCenterStatsTab(
                     header: header,
                     playByPlay: pbp,
+                    boxscore: boxscore,
+                    boxscoreState: boxscoreState,
+                    onRetryLoadBoxscore: () {
+                      unawaited(
+                        gameCenter.ensureBoxscore(forceRefresh: true),
+                      );
+                    },
                     segment: _statsSegment,
                     onSegmentChanged: (v) => setState(() => _statsSegment = v),
                   ),
                   GameCenterTab.recap => GameCenterRecapTab(
                     header: header,
                     playByPlay: pbp,
+                    landing: landing,
+                    landingState: landingState,
+                    onRetryLoadLanding: () =>
+                        unawaited(gameCenter.ensureLanding(forceRefresh: true)),
                   ),
                 },
               ),
