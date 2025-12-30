@@ -298,7 +298,7 @@ class _StatusChip extends StatelessWidget {
       child: Text(
         label,
         style: AppFonts.captionSemibold.copyWith(color: Colors.white),
-        textAlign: .center,
+        textAlign: TextAlign.center,
       ),
     );
   }

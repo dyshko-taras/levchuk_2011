@@ -4,6 +4,7 @@ import 'package:ice_line_tracker/ui/pages/game_center_page.dart';
 import 'package:ice_line_tracker/ui/pages/main_shell_page.dart';
 import 'package:ice_line_tracker/ui/pages/settings_page.dart';
 import 'package:ice_line_tracker/ui/pages/splash_page.dart';
+import 'package:ice_line_tracker/ui/pages/team_page.dart';
 import 'package:ice_line_tracker/ui/pages/welcome_page.dart';
 
 /// App route names.
@@ -59,5 +60,6 @@ class AppRoutes {
     ),
     settings: (_) => const SettingsPage(),
     gameCenter: (_) => const GameCenterPage(),
+    team: (_) => const TeamPage(),
   };
 }

@@ -26,11 +26,21 @@ class NhlStandingRow {
   const NhlStandingRow({
     required this.date,
     required this.seasonId,
+    required this.conferenceName,
+    required this.divisionName,
+    required this.wildcardSequence,
     required this.gamesPlayed,
     required this.wins,
     required this.losses,
     required this.otLosses,
     required this.points,
+    required this.goalFor,
+    required this.goalAgainst,
+    required this.goalDifferential,
+    required this.l10Wins,
+    required this.l10Losses,
+    required this.l10OtLosses,
+    required this.regulationPlusOtWins,
     required this.streakCode,
     required this.streakCount,
     required this.teamLogo,
@@ -45,11 +55,25 @@ class NhlStandingRow {
   final String date;
   final int seasonId;
 
+  final String conferenceName;
+  final String divisionName;
+  final int wildcardSequence;
+
   final int gamesPlayed;
   final int wins;
   final int losses;
   final int otLosses;
   final int points;
+
+  final int goalFor;
+  final int goalAgainst;
+  final int goalDifferential;
+
+  final int l10Wins;
+  final int l10Losses;
+  final int l10OtLosses;
+
+  final int regulationPlusOtWins;
 
   final String streakCode;
   final int streakCount;

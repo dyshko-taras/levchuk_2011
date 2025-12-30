@@ -12,7 +12,9 @@ import 'package:ice_line_tracker/constants/app_strings.dart';
 import 'package:ice_line_tracker/enums/main_tab.dart';
 import 'package:ice_line_tracker/providers/home_provider.dart';
 import 'package:ice_line_tracker/providers/shell_navigation_provider.dart';
+import 'package:ice_line_tracker/providers/standings_provider.dart';
 import 'package:ice_line_tracker/ui/pages/home_page.dart';
+import 'package:ice_line_tracker/ui/pages/standings_page.dart';
 import 'package:ice_line_tracker/ui/theme/app_colors.dart';
 import 'package:ice_line_tracker/ui/theme/app_gradients.dart';
 import 'package:provider/provider.dart';
@@ -71,7 +73,7 @@ class _MainShellPageState extends State<MainShellPage> {
         index: shell.activeIndex,
         children: const [
           HomePage(),
-          Center(child: Text(AppStrings.standingsTitle)),
+          StandingsPage(),
           Center(child: Text(AppStrings.teamCompareTitle)),
           Center(child: Text(AppStrings.favoritesTitle)),
           Center(child: Text(AppStrings.gameInsightLabTitle)),
@@ -164,6 +166,21 @@ PreferredSizeWidget _buildAppBar(BuildContext context, MainTab activeTab) {
     MainTab.standings => AppBar(
       automaticallyImplyLeading: false,
       title: const Text(AppStrings.standingsTitle),
+      actions: [
+        IconButton(
+          onPressed: () {
+            unawaited(context.read<StandingsProvider>().refresh());
+          },
+          tooltip: AppStrings.refresh,
+          icon: SvgPicture.asset(
+            AppIcons.refresh,
+            colorFilter: const ColorFilter.mode(
+              AppColors.textBlack,
+              BlendMode.srcIn,
+            ),
+          ),
+        ),
+      ],
     ),
     MainTab.compare => AppBar(
       automaticallyImplyLeading: false,

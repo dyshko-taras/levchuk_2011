@@ -27,11 +27,11 @@ Map<String, dynamic> _$NhlScheduleResponseToJson(
 
 NhlGameDay _$NhlGameDayFromJson(Map<String, dynamic> json) => NhlGameDay(
   date: json['date'] as String,
-  dayAbbrev: json['dayAbbrev'] as String? ?? '',
   numberOfGames: (json['numberOfGames'] as num).toInt(),
   games: (json['games'] as List<dynamic>)
       .map((e) => NhlScheduledGame.fromJson(e as Map<String, dynamic>))
       .toList(),
+  dayAbbrev: json['dayAbbrev'] as String? ?? '',
 );
 
 Map<String, dynamic> _$NhlGameDayToJson(NhlGameDay instance) =>
@@ -51,6 +51,8 @@ NhlScheduledGame _$NhlScheduledGameFromJson(
   startTimeUTC: json['startTimeUTC'] as String,
   gameState: json['gameState'] as String,
   gameScheduleState: json['gameScheduleState'] as String,
+  awayTeam: NhlScheduleTeam.fromJson(json['awayTeam'] as Map<String, dynamic>),
+  homeTeam: NhlScheduleTeam.fromJson(json['homeTeam'] as Map<String, dynamic>),
   venue: json['venue'] == null
       ? null
       : NhlScheduleVenue.fromJson(json['venue'] as Map<String, dynamic>),
@@ -69,8 +71,6 @@ NhlScheduledGame _$NhlScheduledGameFromJson(
       ? null
       : NhlGameOutcome.fromJson(json['gameOutcome'] as Map<String, dynamic>),
   gameCenterLink: json['gameCenterLink'] as String?,
-  awayTeam: NhlScheduleTeam.fromJson(json['awayTeam'] as Map<String, dynamic>),
-  homeTeam: NhlScheduleTeam.fromJson(json['homeTeam'] as Map<String, dynamic>),
 );
 
 Map<String, dynamic> _$NhlScheduledGameToJson(NhlScheduledGame instance) =>
@@ -103,14 +103,14 @@ NhlScheduleTeam _$NhlScheduleTeamFromJson(Map<String, dynamic> json) =>
       placeName: NhlLocalizedName.fromJson(
         json['placeName'] as Map<String, dynamic>,
       ),
+      logo: json['logo'] as String,
+      score: (json['score'] as num?)?.toInt(),
       placeNameWithPreposition: json['placeNameWithPreposition'] == null
           ? null
           : NhlLocalizedName.fromJson(
               json['placeNameWithPreposition'] as Map<String, dynamic>,
             ),
-      logo: json['logo'] as String,
       darkLogo: json['darkLogo'] as String?,
-      score: (json['score'] as num?)?.toInt(),
     );
 
 Map<String, dynamic> _$NhlScheduleTeamToJson(NhlScheduleTeam instance) =>
