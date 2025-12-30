@@ -1,3 +1,6 @@
+import 'dart:convert';
+
+import 'package:ice_line_tracker/data/models/nhl_schedule_response.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 enum GameAlertType {
@@ -15,6 +18,8 @@ class FavoritesStore {
 
   static String _gameAlertKey(int gameId, GameAlertType type) =>
       'favorite_game_${gameId}_alert_${type.name}';
+
+  static String _gameDataKey(int gameId) => 'favorite_game_${gameId}_data_v1';
 
   Set<String> getFavoriteTeamAbbrevs() =>
       (_prefs.getStringList(_kFavoriteTeams) ?? const <String>[]).toSet();
@@ -43,13 +48,35 @@ class FavoritesStore {
     gameIds.map((e) => e.toString()).toList()..sort(),
   );
 
-  Future<bool> toggleFavoriteGame(int gameId) async {
+  NhlScheduledGame? getFavoriteGame(int gameId) {
+    final json = _prefs.getString(_gameDataKey(gameId));
+    if (json == null || json.isEmpty) return null;
+    try {
+      return NhlScheduledGame.fromJson(
+        Map<String, Object?>.from(jsonDecode(json) as Map),
+      );
+    } on Object {
+      return null;
+    }
+  }
+
+  Future<void> setFavoriteGame(int gameId, NhlScheduledGame game) async {
+    await _prefs.setString(_gameDataKey(gameId), jsonEncode(game.toJson()));
+  }
+
+  Future<bool> toggleFavoriteGame(
+    int gameId, {
+    NhlScheduledGame? game,
+  }) async {
     final current = getFavoriteGameIds();
     final added = current.add(gameId);
     if (!added) {
       current.remove(gameId);
       await _prefs.remove(_gameAlertKey(gameId, GameAlertType.goals));
       await _prefs.remove(_gameAlertKey(gameId, GameAlertType.final_));
+      await _prefs.remove(_gameDataKey(gameId));
+    } else if (game != null) {
+      await setFavoriteGame(gameId, game);
     }
     await setFavoriteGameIds(current);
     return added;

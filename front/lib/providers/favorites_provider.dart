@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:ice_line_tracker/data/local/favorites_store.dart';
+import 'package:ice_line_tracker/data/models/nhl_schedule_response.dart';
 
 class FavoritesProvider extends ChangeNotifier {
   FavoritesProvider(this._store) {
@@ -19,6 +20,9 @@ class FavoritesProvider extends ChangeNotifier {
       _favoriteTeamAbbrevs.contains(teamAbbrev);
   bool isFavoriteGame(int gameId) => _favoriteGameIds.contains(gameId);
 
+  NhlScheduledGame? getFavoriteGame(int gameId) =>
+      _store.getFavoriteGame(gameId);
+
   Future<bool> toggleFavoriteTeam(String teamAbbrev) async {
     final added = await _store.toggleFavoriteTeam(teamAbbrev);
     _favoriteTeamAbbrevs = _store.getFavoriteTeamAbbrevs();
@@ -26,8 +30,11 @@ class FavoritesProvider extends ChangeNotifier {
     return added;
   }
 
-  Future<bool> toggleFavoriteGame(int gameId) async {
-    final added = await _store.toggleFavoriteGame(gameId);
+  Future<bool> toggleFavoriteGame(
+    int gameId, {
+    NhlScheduledGame? game,
+  }) async {
+    final added = await _store.toggleFavoriteGame(gameId, game: game);
     _favoriteGameIds = _store.getFavoriteGameIds();
     notifyListeners();
     return added;

@@ -121,14 +121,16 @@
   - [x] Врахувати кешування/обмеження API з tech spec.
 
 - [ ] **Фаза 10 — Player Page**
-  - [ ] API: профіль/overview + game log (для графіка “Points by game”).
-  - [ ] UI: Player card header, season stats (skater/goalie), mini chart, actions (Share, Compare).
-  - [ ] Навігація: запуск Compare з preselected player/team (за правилами PRD/tech spec).
+  - [x] API: профіль/overview + game log (для графіка “Points by game”).
+  - [x] UI: Player card header, season stats (skater/goalie), mini chart, actions (Share, Compare).
+  - [ ] Навігація:
+    - [x] Перехід на Compare
+    - [ ] Compare з preselected player/team (за правилами PRD/tech spec).
 
 - [ ] **Фаза 11 — Favorites**
-  - [ ] Дві вкладки: Teams та Games.
-  - [ ] Teams: список favorite команд + швидкі дії.
-  - [ ] Games: список favorite ігор, toggles нотифікацій (Goals/Final), дії Delete/Share, confirm dialog.
+  - [x] Дві вкладки: Teams та Games.
+  - [x] Teams: список favorite команд + швидкі дії.
+  - [x] Games: список favorite ігор, toggles нотифікацій (Goals/Final), дії Delete/Share, confirm dialog.
   - [ ] Синхронізація favorites між Home/Game Center/Team.
 
 - [ ] **Фаза 12 — Team Compare (H2H Analyzer)**

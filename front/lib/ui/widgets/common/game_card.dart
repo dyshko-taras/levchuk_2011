@@ -146,7 +146,9 @@ class GameCard extends StatelessWidget {
                         _toggleAlerts(favorites, game.id, alertsEnabled),
                       ),
                       onToggleFavorite: () =>
-                          unawaited(favorites.toggleFavoriteGame(game.id)),
+                          unawaited(
+                            favorites.toggleFavoriteGame(game.id, game: game),
+                          ),
                     ),
                   ],
                 ),
@@ -160,7 +162,9 @@ class GameCard extends StatelessWidget {
                       _toggleAlerts(favorites, game.id, alertsEnabled),
                     ),
                     onToggleFavorite: () =>
-                        unawaited(favorites.toggleFavoriteGame(game.id)),
+                        unawaited(
+                          favorites.toggleFavoriteGame(game.id, game: game),
+                        ),
                   ),
                 ),
             ],
