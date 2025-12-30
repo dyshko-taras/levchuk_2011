@@ -30,6 +30,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   HomeListFilter _filter = HomeListFilter.liveNow;
+  bool _userSelectedFilter = false;
 
   @override
   void initState() {
@@ -64,6 +65,10 @@ class _HomePageState extends State<HomePage> {
     day ??= days.isNotEmpty ? days.first : null;
 
     final games = day?.games ?? const <NhlScheduledGame>[];
+    _maybeAutoSelectFilter(
+      games: games,
+      activeDateYyyyMmDd: home.activeDateYyyyMmDd,
+    );
     final filteredGames = games.where((g) {
       final status = gameStatusForGame(g);
       return switch (_filter) {
@@ -86,12 +91,18 @@ class _HomePageState extends State<HomePage> {
           if (home.showingCached && data != null) const _OfflineBanner(),
           _DateRibbon(
             selectedDay: selectedDay,
-            onSelected: (d) => unawaited(home.loadByDate(_toYyyyMmDd(d))),
+            onSelected: (d) {
+              setState(() => _userSelectedFilter = false);
+              unawaited(home.loadByDate(_toYyyyMmDd(d)));
+            },
           ),
           Gaps.hXl,
           _FilterSegmented(
             value: _filter,
-            onChanged: (v) => setState(() => _filter = v),
+            onChanged: (v) => setState(() {
+              _filter = v;
+              _userSelectedFilter = true;
+            }),
           ),
           Gaps.hXl,
           if (state.isLoading && data == null)
@@ -133,6 +144,39 @@ class _HomePageState extends State<HomePage> {
         ],
       ),
     );
+  }
+
+  void _maybeAutoSelectFilter({
+    required List<NhlScheduledGame> games,
+    required String? activeDateYyyyMmDd,
+  }) {
+    if (_userSelectedFilter) return;
+    final activeDate = activeDateYyyyMmDd;
+    if (activeDate == null) return;
+
+    final today = _toYyyyMmDd(DateTime.now());
+    if (activeDate != today) return;
+
+    final hasLive = games.any((g) => gameStatusForGame(g) == GameStatus.live);
+    final hasUpcoming =
+        games.any((g) => gameStatusForGame(g) == GameStatus.upcoming);
+    final hasFinal =
+        games.any((g) => gameStatusForGame(g) == GameStatus.final_);
+
+    final preferred = hasLive
+        ? HomeListFilter.liveNow
+        : hasUpcoming
+        ? HomeListFilter.upcoming
+        : hasFinal
+        ? HomeListFilter.final_
+        : null;
+
+    if (preferred == null || preferred == _filter) return;
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      setState(() => _filter = preferred);
+    });
   }
 }
 

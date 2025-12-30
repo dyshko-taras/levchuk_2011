@@ -15,9 +15,11 @@ import 'package:ice_line_tracker/data/models/nhl_schedule_response.dart';
 import 'package:ice_line_tracker/data/models/nhl_standings_response.dart';
 import 'package:ice_line_tracker/data/repositories/cached_standings_repository.dart';
 import 'package:ice_line_tracker/providers/favorites_provider.dart';
+import 'package:ice_line_tracker/services/notification_service.dart';
 import 'package:ice_line_tracker/ui/theme/app_colors.dart';
 import 'package:ice_line_tracker/ui/theme/app_fonts.dart';
 import 'package:ice_line_tracker/ui/widgets/common/game_card.dart';
+import 'package:ice_line_tracker/ui/widgets/dialogs/notifications_permission_dialog.dart';
 import 'package:ice_line_tracker/ui/widgets/fields/app_segmented_control.dart';
 import 'package:provider/provider.dart';
 
@@ -372,9 +374,10 @@ class _FavoriteGameCard extends StatelessWidget {
                 label: AppStrings.bellFinal,
                 value: bellFinal,
                 onChanged: (enabled) => unawaited(
-                  favorites.setGameAlertEnabled(
-                    gameId,
-                    GameAlertType.final_,
+                  _onFinalAlertChanged(
+                    context,
+                    favorites,
+                    gameId: gameId,
                     enabled: enabled,
                     game: g,
                   ),
@@ -406,6 +409,30 @@ class _FavoriteGameCard extends StatelessWidget {
       ),
     );
   }
+}
+
+Future<void> _onFinalAlertChanged(
+  BuildContext context,
+  FavoritesProvider favorites, {
+  required int gameId,
+  required bool enabled,
+  required NhlScheduledGame? game,
+}) async {
+  if (enabled) {
+    final notifications = context.read<NotificationService>();
+    final ok = await notifications.ensureNotificationPermission();
+    if (!ok && context.mounted) {
+      await NotificationsPermissionDialog.show(context);
+      return;
+    }
+  }
+
+  await favorites.setGameAlertEnabled(
+    gameId,
+    GameAlertType.final_,
+    enabled: enabled,
+    game: game,
+  );
 }
 
 class _NotificationToggle extends StatelessWidget {

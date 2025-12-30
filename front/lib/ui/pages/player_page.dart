@@ -6,14 +6,12 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:ice_line_tracker/constants/app_icons.dart';
 import 'package:ice_line_tracker/constants/app_radius.dart';
-import 'package:ice_line_tracker/constants/app_routes.dart';
 import 'package:ice_line_tracker/constants/app_sizes.dart';
 import 'package:ice_line_tracker/constants/app_spacing.dart';
 import 'package:ice_line_tracker/constants/app_strings.dart';
 import 'package:ice_line_tracker/providers/player_provider.dart';
 import 'package:ice_line_tracker/ui/theme/app_colors.dart';
 import 'package:ice_line_tracker/ui/theme/app_fonts.dart';
-import 'package:ice_line_tracker/ui/widgets/buttons/primary_button.dart';
 import 'package:ice_line_tracker/utils/async_state.dart';
 import 'package:provider/provider.dart';
 
@@ -140,17 +138,7 @@ class _PlayerPageState extends State<PlayerPage> {
                         ],
                       ),
                     ),
-                    Padding(
-                      padding: Insets.allLg,
-                      child: PrimaryButton(
-                        label: AppStrings.compare,
-                        onPressed: () {
-                          unawaited(
-                            Navigator.pushNamed(context, AppRoutes.compare),
-                          );
-                        },
-                      ),
-                    ),
+                    Gaps.hLg,
                   ],
                 );
               },

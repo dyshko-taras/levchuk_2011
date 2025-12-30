@@ -112,7 +112,8 @@
     - [x] Penalties
     - [x] Stats (Home/Game/Away сегменти, team stats, player tables)
     - [x] Recap (score by period, special teams, highlights summary, broadcasters, Share)
-  - [ ] Навігація: перехід на `TeamPage`/`PlayerPage` з відповідних елементів.
+  - [x] Навігація: перехід на `TeamPage` з header (tap team logo/name).
+  - [ ] Навігація: перехід на `PlayerPage` з відповідних елементів.
 
 - [x] **Фаза 8 — Standings**
 
@@ -136,16 +137,15 @@
 - [ ] **Фаза 10 — Player Page**
 
   - [x] API: профіль/overview + game log (для графіка “Points by game”).
-  - [x] UI: Player card header, season stats (skater/goalie), mini chart, actions (Share, Compare).
+  - [x] UI: Player card header, season stats (skater/goalie), mini chart, actions (Share).
   - [ ] Навігація:
-    - [x] Перехід на Compare
-    - [ ] Compare з preselected player/team (за правилами PRD/tech spec).
+    - [ ] Compare з preselected player/team (за правилами PRD/tech spec) — не робимо поки.
 
 - [ ] **Фаза 11 — Favorites**
 
   - [x] Дві вкладки: Teams та Games.
   - [x] Teams: список favorite команд + швидкі дії.
-  - [x] Games: список favorite ігор, toggles нотифікацій (Goals/Final), дії Delete/Share, confirm dialog.
+  - [x] Games: список favorite ігор, toggles нотифікацій (Final), дії Delete/Share, confirm dialog.
   - [ ] Синхронізація favorites між Home/Game Center/Team.
 
 - [ ] **Фаза 12 — Team Compare (H2H Analyzer)**
@@ -175,7 +175,7 @@
     - [x] Глобальні toggles (Settings) керують сповіщеннями Final alerts.
     - [x] Per-game toggles (Favorites + cards) для Final alerts.
     - [ ] Pre-game reminders за налаштуваннями (якщо активовано) — не робимо поки.
-  - [ ] Обробити відмову в дозволах/відсутність дозволу (graceful UX).
+  - [x] Обробити відмову в дозволах/відсутність дозволу (graceful UX).
 
 - [ ] **Фаза 16 — Якість: edge cases, продуктивність, готовність до релізу**
   - [ ] Уніфікувати стани: loading/error/empty + retry, skeletons де доречно.

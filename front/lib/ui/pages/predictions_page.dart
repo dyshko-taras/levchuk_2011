@@ -11,10 +11,12 @@ import 'package:ice_line_tracker/constants/app_strings.dart';
 import 'package:ice_line_tracker/data/local/favorites_store.dart';
 import 'package:ice_line_tracker/providers/favorites_provider.dart';
 import 'package:ice_line_tracker/providers/predictions_provider.dart';
+import 'package:ice_line_tracker/services/notification_service.dart';
 import 'package:ice_line_tracker/ui/theme/app_colors.dart';
 import 'package:ice_line_tracker/ui/theme/app_fonts.dart';
 import 'package:ice_line_tracker/ui/theme/app_gradients.dart';
 import 'package:ice_line_tracker/ui/widgets/buttons/primary_button.dart';
+import 'package:ice_line_tracker/ui/widgets/dialogs/notifications_permission_dialog.dart';
 import 'package:ice_line_tracker/ui/widgets/fields/app_segmented_control.dart';
 import 'package:ice_line_tracker/utils/async_state.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
@@ -446,8 +448,16 @@ class _PredictionDetails extends StatelessWidget {
 
   Future<void> _watchThisGame(BuildContext context) async {
     final favorites = context.read<FavoritesProvider>();
+    final notifications = context.read<NotificationService>();
     final g = prediction.game;
     await favorites.toggleFavoriteGame(g.id, game: g);
+
+    final ok = await notifications.ensureNotificationPermission();
+    if (!ok && context.mounted) {
+      await NotificationsPermissionDialog.show(context);
+      return;
+    }
+
     await favorites.setGameAlertEnabled(
       g.id,
       GameAlertType.final_,

@@ -4,7 +4,6 @@ import 'package:ice_line_tracker/data/models/nhl_schedule_response.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 enum GameAlertType {
-  goals,
   final_,
 }
 
@@ -72,8 +71,8 @@ class FavoritesStore {
     final added = current.add(gameId);
     if (!added) {
       current.remove(gameId);
-      await _prefs.remove(_gameAlertKey(gameId, GameAlertType.goals));
       await _prefs.remove(_gameAlertKey(gameId, GameAlertType.final_));
+      await _prefs.remove(_legacyGoalsAlertKey(gameId));
       await _prefs.remove(_gameDataKey(gameId));
     } else if (game != null) {
       await setFavoriteGame(gameId, game);
@@ -91,3 +90,6 @@ class FavoritesStore {
     required bool enabled,
   }) => _prefs.setBool(_gameAlertKey(gameId, type), enabled);
 }
+
+String _legacyGoalsAlertKey(int gameId) =>
+    'favorite_game_${gameId}_alert_goals';

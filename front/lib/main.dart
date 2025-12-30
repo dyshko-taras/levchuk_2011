@@ -1,6 +1,7 @@
 import 'package:device_preview/device_preview.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:ice_line_tracker/app.dart';
 import 'package:ice_line_tracker/app_dependencies.dart';
 import 'package:ice_line_tracker/data/api/api_client.dart';
@@ -32,6 +33,11 @@ bool _isDevicePreviewAvailable() => kDebugMode;
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  await SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown,
+  ]);
 
   final sharedPrefs = await SharedPreferences.getInstance();
   final prefsStore = PrefsStore(sharedPrefs);

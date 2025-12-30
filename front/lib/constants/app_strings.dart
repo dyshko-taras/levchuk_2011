@@ -170,6 +170,8 @@ class AppStrings {
   static const String poweredByNhlStatsApiV1 = 'Powered by NHL Stats API v1';
   static const String appVersion = 'App version';
   static const String openSourceLicenses = 'Open source licenses';
+  static const String privacyPolicy = 'Privacy Policy';
+  static const String support = 'Support';
   static const String devicePreview = 'Device preview';
   static const String settingsVersionLabel = 'v{version} ({build})';
 

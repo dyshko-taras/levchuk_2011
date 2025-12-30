@@ -1,10 +1,13 @@
 // ignore_for_file: unreachable_from_main // WorkManager runs callback in background isolate.
 
 import 'dart:async';
+import 'dart:convert';
 
+import 'package:dio/dio.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:ice_line_tracker/constants/app_routes.dart';
 import 'package:ice_line_tracker/constants/app_strings.dart';
+import 'package:ice_line_tracker/core/endpoints.dart';
 import 'package:ice_line_tracker/data/local/favorites_store.dart';
 import 'package:ice_line_tracker/data/local/prefs_store.dart';
 import 'package:ice_line_tracker/data/models/nhl_schedule_response.dart';
@@ -15,6 +18,8 @@ const String _kFinalAlertChannelId = 'final_alerts';
 const String _kFinalAlertChannelName = 'Final alerts';
 
 const Duration _estimatedGameDuration = Duration(minutes: 165);
+const Duration _pollDelay = Duration(minutes: 10);
+const int _maxPollAttempts = 18;
 
 @pragma('vm:entry-point')
 void callbackDispatcher() {
@@ -23,14 +28,37 @@ void callbackDispatcher() {
     final gameId = inputData?['gameId'];
     if (gameId is! int) return true;
 
-    final away = inputData?['awayTeam'] as String? ?? AppStrings.notAvailable;
-    final home = inputData?['homeTeam'] as String? ?? AppStrings.notAvailable;
+    final awayAbbrev =
+        inputData?['awayTeam'] as String? ?? AppStrings.notAvailable;
+    final homeAbbrev =
+        inputData?['homeTeam'] as String? ?? AppStrings.notAvailable;
+    final attempt = inputData?['attempt'] as int? ?? 0;
 
     final notifications = FlutterLocalNotificationsPlugin();
 
     const androidSettings = AndroidInitializationSettings('@mipmap/ic_launcher');
     const settings = InitializationSettings(android: androidSettings);
     await notifications.initialize(settings);
+
+    final landing = await _fetchLanding(gameId);
+    final isFinal = _isFinalFromLanding(landing);
+    if (!isFinal) {
+      if (attempt >= _maxPollAttempts) return true;
+
+      await Workmanager().registerOneOffTask(
+        _finalAlertUniqueName(gameId),
+        _kFinalAlertTaskName,
+        initialDelay: _pollDelay,
+        existingWorkPolicy: ExistingWorkPolicy.replace,
+        inputData: <String, Object?>{
+          'gameId': gameId,
+          'awayTeam': awayAbbrev,
+          'homeTeam': homeAbbrev,
+          'attempt': attempt + 1,
+        },
+      );
+      return true;
+    }
 
     const androidDetails = AndroidNotificationDetails(
       _kFinalAlertChannelId,
@@ -40,10 +68,16 @@ void callbackDispatcher() {
       priority: Priority.high,
     );
 
+    final (title, body) = _finalNotificationText(
+      landing,
+      awayFallback: awayAbbrev,
+      homeFallback: homeAbbrev,
+    );
+
     await notifications.show(
       gameId,
-      AppStrings.final_,
-      '$away @ $home',
+      title,
+      body,
       const NotificationDetails(android: androidDetails),
       payload: 'route=${AppRoutes.gameCenter}&gameId=$gameId',
     );
@@ -176,3 +210,81 @@ class NotificationService {
 }
 
 String _finalAlertUniqueName(int gameId) => 'final_alert_$gameId';
+
+Future<Map<String, Object?>?> _fetchLanding(int gameId) async {
+  try {
+    final dio = Dio(
+      BaseOptions(
+        baseUrl: Endpoints.nhlWebApiBaseUrl,
+        connectTimeout: const Duration(seconds: 10),
+        receiveTimeout: const Duration(seconds: 20),
+        headers: <String, Object?>{
+          'Accept': 'application/json',
+        },
+      ),
+    );
+
+    final res = await dio.get<Object>('/gamecenter/$gameId/landing');
+    final data = res.data;
+    if (data is Map) {
+      return data.cast<String, Object?>();
+    }
+    if (data is String) {
+      final decoded = jsonDecode(data);
+      if (decoded is Map) {
+        return decoded.cast<String, Object?>();
+      }
+    }
+  } on Object {
+    // Ignore and allow retry polling.
+  }
+  return null;
+}
+
+bool _isFinalFromLanding(Map<String, Object?>? landing) {
+  final raw = landing;
+  if (raw == null) return false;
+
+  final gameState = raw['gameState'];
+  if (gameState is String) {
+    final v = gameState.toUpperCase();
+    if (v == 'FINAL' || v == 'OFF') return true;
+  }
+
+  final scheduleState = raw['gameScheduleState'];
+  if (scheduleState is String && scheduleState.toUpperCase() == 'OFF') {
+    return true;
+  }
+
+  return false;
+}
+
+(String title, String body) _finalNotificationText(
+  Map<String, Object?>? landing, {
+  required String awayFallback,
+  required String homeFallback,
+}) {
+  final raw = landing;
+  if (raw == null) return (AppStrings.final_, '$awayFallback @ $homeFallback');
+
+  final home = raw['homeTeam'];
+  final away = raw['awayTeam'];
+
+  final homeMap = home is Map ? home.cast<String, Object?>() : null;
+  final awayMap = away is Map ? away.cast<String, Object?>() : null;
+
+  final homeAbbrev = (homeMap?['abbrev'] as String?) ?? homeFallback;
+  final awayAbbrev = (awayMap?['abbrev'] as String?) ?? awayFallback;
+
+  final homeScore = homeMap?['score'];
+  final awayScore = awayMap?['score'];
+
+  if (homeScore is num && awayScore is num) {
+    return (
+      AppStrings.final_,
+      '$awayAbbrev ${awayScore.toInt()} – ${homeScore.toInt()} $homeAbbrev',
+    );
+  }
+
+  return (AppStrings.final_, '$awayAbbrev @ $homeAbbrev');
+}

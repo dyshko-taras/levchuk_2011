@@ -12,8 +12,10 @@ import 'package:ice_line_tracker/data/local/favorites_store.dart';
 import 'package:ice_line_tracker/data/models/nhl_schedule_response.dart';
 import 'package:ice_line_tracker/providers/favorites_provider.dart';
 import 'package:ice_line_tracker/providers/home_provider.dart';
+import 'package:ice_line_tracker/services/notification_service.dart';
 import 'package:ice_line_tracker/ui/theme/app_colors.dart';
 import 'package:ice_line_tracker/ui/theme/app_fonts.dart';
+import 'package:ice_line_tracker/ui/widgets/dialogs/notifications_permission_dialog.dart';
 import 'package:provider/provider.dart';
 
 class GameCard extends StatelessWidget {
@@ -21,12 +23,16 @@ class GameCard extends StatelessWidget {
     required this.game,
     this.enableNavigation = true,
     this.onTap,
+    this.onAwayTeamTap,
+    this.onHomeTeamTap,
     super.key,
   });
 
   final NhlScheduledGame game;
   final bool enableNavigation;
   final VoidCallback? onTap;
+  final VoidCallback? onAwayTeamTap;
+  final VoidCallback? onHomeTeamTap;
 
   static const double _borderWidth = 0.66;
   static const Color _borderColor = Color(0x33000000);
@@ -93,6 +99,7 @@ class GameCard extends StatelessWidget {
                     abbrev: game.awayTeam.abbrev,
                     name: game.awayTeam.commonName.defaultName,
                     alignEnd: false,
+                    onTap: onAwayTeamTap,
                   ),
                   Expanded(
                     child: Column(
@@ -121,6 +128,7 @@ class GameCard extends StatelessWidget {
                     abbrev: game.homeTeam.abbrev,
                     name: game.homeTeam.commonName.defaultName,
                     alignEnd: true,
+                    onTap: onHomeTeamTap,
                   ),
                 ],
               ),
@@ -142,7 +150,12 @@ class GameCard extends StatelessWidget {
                       alertsEnabled: alertsEnabled,
                       favoriteEnabled: isFavorite,
                       onToggleAlerts: () => unawaited(
-                        _toggleFinalAlert(favorites, game, alertsEnabled),
+                        _toggleFinalAlert(
+                          context,
+                          favorites,
+                          game,
+                          alertsEnabled,
+                        ),
                       ),
                       onToggleFavorite: () =>
                           unawaited(
@@ -158,7 +171,12 @@ class GameCard extends StatelessWidget {
                     alertsEnabled: alertsEnabled,
                     favoriteEnabled: isFavorite,
                     onToggleAlerts: () => unawaited(
-                      _toggleFinalAlert(favorites, game, alertsEnabled),
+                      _toggleFinalAlert(
+                        context,
+                        favorites,
+                        game,
+                        alertsEnabled,
+                      ),
                     ),
                     onToggleFavorite: () =>
                         unawaited(
@@ -174,11 +192,20 @@ class GameCard extends StatelessWidget {
   }
 
   Future<void> _toggleFinalAlert(
+    BuildContext context,
     FavoritesProvider favorites,
     NhlScheduledGame game,
     bool currentlyEnabled,
   ) async {
     final next = !currentlyEnabled;
+    if (next) {
+      final notifications = context.read<NotificationService>();
+      final ok = await notifications.ensureNotificationPermission();
+      if (!ok && context.mounted) {
+        await NotificationsPermissionDialog.show(context);
+        return;
+      }
+    }
     await favorites.setGameAlertEnabled(
       game.id,
       GameAlertType.final_,
@@ -309,12 +336,14 @@ class _TeamColumn extends StatelessWidget {
     required this.abbrev,
     required this.name,
     required this.alignEnd,
+    this.onTap,
   });
 
   final String logoUrl;
   final String abbrev;
   final String name;
   final bool alignEnd;
+  final VoidCallback? onTap;
 
   static const double _logoSize = 72;
 
@@ -326,30 +355,34 @@ class _TeamColumn extends StatelessWidget {
 
     return SizedBox(
       width: 90,
-      child: Column(
-        crossAxisAlignment: alignment,
-        children: [
-          SvgPicture.network(
-            logoUrl,
-            width: _logoSize,
-            height: _logoSize,
-            placeholderBuilder: (context) => const SizedBox(
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: AppRadius.md,
+        child: Column(
+          crossAxisAlignment: alignment,
+          children: [
+            SvgPicture.network(
+              logoUrl,
               width: _logoSize,
               height: _logoSize,
+              placeholderBuilder: (context) => const SizedBox(
+                width: _logoSize,
+                height: _logoSize,
+              ),
             ),
-          ),
-          Gaps.hXs,
-          Text(
-            name,
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              fontWeight: FontWeight.w800,
-              color: AppColors.textBlack,
+            Gaps.hXs,
+            Text(
+              name,
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                fontWeight: FontWeight.w800,
+                color: AppColors.textBlack,
+              ),
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+              textAlign: alignEnd ? TextAlign.end : TextAlign.start,
             ),
-            maxLines: 2,
-            overflow: TextOverflow.ellipsis,
-            textAlign: alignEnd ? TextAlign.end : TextAlign.start,
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

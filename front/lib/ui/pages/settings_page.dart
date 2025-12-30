@@ -15,10 +15,9 @@ import 'package:ice_line_tracker/services/notification_service.dart';
 import 'package:ice_line_tracker/ui/theme/app_colors.dart';
 import 'package:ice_line_tracker/ui/theme/app_fonts.dart';
 import 'package:ice_line_tracker/ui/theme/app_gradients.dart';
-import 'package:ice_line_tracker/ui/widgets/buttons/primary_button.dart';
+import 'package:ice_line_tracker/ui/widgets/dialogs/notifications_permission_dialog.dart';
 import 'package:ice_line_tracker/ui/widgets/fields/app_segmented_control.dart';
 import 'package:package_info_plus/package_info_plus.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 
 class SettingsPage extends StatefulWidget {
@@ -89,14 +88,19 @@ class _SettingsPageState extends State<SettingsPage> {
             ),
           ),
           Gaps.hMd,
-          PrimaryButton(
-            label: AppStrings.testNotification,
-            onPressed: () => unawaited(_onTestNotificationPressed(context)),
-          ),
-          Gaps.hXl,
           const Text(AppStrings.appSection, style: AppFonts.heading2),
           Gaps.hSm,
           const _InfoCard(text: AppStrings.poweredByNhlStatsApiV1),
+          Gaps.hMd,
+          const _NavRow(
+            label: AppStrings.privacyPolicy,
+            onTap: null,
+          ),
+          Gaps.hMd,
+          const _NavRow(
+            label: AppStrings.support,
+            onTap: null,
+          ),
           Gaps.hMd,
           _NavRow(
             label: AppStrings.appVersion,
@@ -143,19 +147,11 @@ class _SettingsPageState extends State<SettingsPage> {
     final notifications = context.read<NotificationService>();
     final granted = await notifications.ensureNotificationPermission();
     if (!granted && context.mounted) {
-      await _showNotificationsPermissionDialog(context);
+      await NotificationsPermissionDialog.show(context);
       return;
     }
 
     await settings.setFinalAlertsEnabled(enabled: true);
-  }
-
-  Future<void> _onTestNotificationPressed(BuildContext context) async {
-    final notifications = context.read<NotificationService>();
-    final ok = await notifications.showTestFinalAlert();
-    if (!ok && context.mounted) {
-      await _showNotificationsPermissionDialog(context);
-    }
   }
 }
 
@@ -285,28 +281,6 @@ Future<void> _openAppVersion(BuildContext context, String version) async {
         title: const Text(AppStrings.appVersion),
         content: Text(version),
         actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: const Text(AppStrings.ok),
-          ),
-        ],
-      );
-    },
-  );
-}
-
-Future<void> _showNotificationsPermissionDialog(BuildContext context) async {
-  await showDialog<void>(
-    context: context,
-    builder: (context) {
-      return AlertDialog(
-        title: const Text(AppStrings.notificationsPermissionTitle),
-        content: const Text(AppStrings.notificationsPermissionBody),
-        actions: [
-          TextButton(
-            onPressed: () => unawaited(openAppSettings()),
-            child: const Text(AppStrings.openSystemSettings),
-          ),
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
             child: const Text(AppStrings.ok),

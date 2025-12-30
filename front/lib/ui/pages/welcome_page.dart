@@ -11,8 +11,8 @@ import 'package:ice_line_tracker/providers/settings_provider.dart';
 import 'package:ice_line_tracker/ui/theme/app_colors.dart';
 import 'package:ice_line_tracker/ui/theme/app_fonts.dart';
 import 'package:ice_line_tracker/ui/widgets/buttons/primary_button.dart';
+import 'package:ice_line_tracker/ui/widgets/dialogs/notifications_permission_dialog.dart';
 import 'package:ice_line_tracker/ui/widgets/fields/app_segmented_control.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 
 class WelcomePage extends StatefulWidget {
@@ -127,7 +127,7 @@ class _WelcomePageState extends State<WelcomePage> {
     final prefs = context.read<PrefsProvider>();
     final ok = await prefs.setDraftFinalAlertsEnabled(enabled: enabled);
     if (!ok && context.mounted) {
-      await _showNotificationsPermissionDialog(context);
+      await NotificationsPermissionDialog.show(context);
     }
   }
 }
@@ -214,26 +214,4 @@ class _WelcomeHero extends StatelessWidget {
       ),
     );
   }
-}
-
-Future<void> _showNotificationsPermissionDialog(BuildContext context) async {
-  await showDialog<void>(
-    context: context,
-    builder: (context) {
-      return AlertDialog(
-        title: const Text(AppStrings.notificationsPermissionTitle),
-        content: const Text(AppStrings.notificationsPermissionBody),
-        actions: [
-          TextButton(
-            onPressed: () => unawaited(openAppSettings()),
-            child: const Text(AppStrings.openSystemSettings),
-          ),
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: const Text(AppStrings.ok),
-          ),
-        ],
-      );
-    },
-  );
 }

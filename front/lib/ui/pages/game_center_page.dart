@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:ice_line_tracker/constants/app_icons.dart';
+import 'package:ice_line_tracker/constants/app_routes.dart';
 import 'package:ice_line_tracker/constants/app_sizes.dart';
 import 'package:ice_line_tracker/constants/app_spacing.dart';
 import 'package:ice_line_tracker/constants/app_strings.dart';
@@ -140,6 +141,18 @@ class _GameCenterPageState extends State<GameCenterPage> {
                   : GameCard(
                       game: _game!,
                       enableNavigation: false,
+                      onAwayTeamTap: () => unawaited(
+                        Navigator.of(context).pushNamed(
+                          AppRoutes.team,
+                          arguments: _game!.awayTeam.abbrev,
+                        ),
+                      ),
+                      onHomeTeamTap: () => unawaited(
+                        Navigator.of(context).pushNamed(
+                          AppRoutes.team,
+                          arguments: _game!.homeTeam.abbrev,
+                        ),
+                      ),
                     ),
             ),
             Padding(

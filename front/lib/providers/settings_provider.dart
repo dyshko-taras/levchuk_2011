@@ -5,10 +5,7 @@ import 'package:ice_line_tracker/services/notification_service.dart';
 class SettingsProvider extends ChangeNotifier {
   SettingsProvider(this._prefs, this._notifications) {
     _defaultDatePreset = _prefs.getDefaultDatePreset();
-    _pushAlertsEnabled = _prefs.getPushAlertsEnabled();
-    _goalAlertsEnabled = _prefs.getGoalAlertsEnabled();
     _finalAlertsEnabled = _prefs.getFinalAlertsEnabled();
-    _preGameRemindersEnabled = _prefs.getPreGameRemindersEnabled();
     _devicePreviewEnabled = _prefs.getDevicePreviewEnabled();
   }
 
@@ -18,27 +15,15 @@ class SettingsProvider extends ChangeNotifier {
   late DefaultDatePreset _defaultDatePreset;
   DefaultDatePreset get defaultDatePreset => _defaultDatePreset;
 
-  late bool _pushAlertsEnabled;
-  bool get pushAlertsEnabled => _pushAlertsEnabled;
-
-  late bool _goalAlertsEnabled;
-  bool get goalAlertsEnabled => _goalAlertsEnabled;
-
   late bool _finalAlertsEnabled;
   bool get finalAlertsEnabled => _finalAlertsEnabled;
-
-  late bool _preGameRemindersEnabled;
-  bool get preGameRemindersEnabled => _preGameRemindersEnabled;
 
   late bool _devicePreviewEnabled;
   bool get devicePreviewEnabled => _devicePreviewEnabled;
 
   void reloadFromPrefs() {
     _defaultDatePreset = _prefs.getDefaultDatePreset();
-    _pushAlertsEnabled = _prefs.getPushAlertsEnabled();
-    _goalAlertsEnabled = _prefs.getGoalAlertsEnabled();
     _finalAlertsEnabled = _prefs.getFinalAlertsEnabled();
-    _preGameRemindersEnabled = _prefs.getPreGameRemindersEnabled();
     _devicePreviewEnabled = _prefs.getDevicePreviewEnabled();
     notifyListeners();
   }
@@ -50,33 +35,12 @@ class SettingsProvider extends ChangeNotifier {
     await _prefs.setDefaultDatePreset(preset);
   }
 
-  Future<void> setPushAlertsEnabled({required bool enabled}) async {
-    if (_pushAlertsEnabled == enabled) return;
-    _pushAlertsEnabled = enabled;
-    notifyListeners();
-    await _prefs.setPushAlertsEnabled(value: enabled);
-  }
-
-  Future<void> setGoalAlertsEnabled({required bool enabled}) async {
-    if (_goalAlertsEnabled == enabled) return;
-    _goalAlertsEnabled = enabled;
-    notifyListeners();
-    await _prefs.setGoalAlertsEnabled(value: enabled);
-  }
-
   Future<void> setFinalAlertsEnabled({required bool enabled}) async {
     if (_finalAlertsEnabled == enabled) return;
     _finalAlertsEnabled = enabled;
     notifyListeners();
     await _prefs.setFinalAlertsEnabled(value: enabled);
     await _notifications.syncFinalAlerts();
-  }
-
-  Future<void> setPreGameRemindersEnabled({required bool enabled}) async {
-    if (_preGameRemindersEnabled == enabled) return;
-    _preGameRemindersEnabled = enabled;
-    notifyListeners();
-    await _prefs.setPreGameRemindersEnabled(value: enabled);
   }
 
   Future<void> setDevicePreviewEnabled({required bool enabled}) async {
