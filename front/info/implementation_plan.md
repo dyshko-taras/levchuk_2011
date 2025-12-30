@@ -134,9 +134,9 @@
   - [ ] Синхронізація favorites між Home/Game Center/Team.
 
 - [ ] **Фаза 12 — Team Compare (H2H Analyzer)**
-  - [ ] UI: вибір Team A/Team B, range (Last 5/Last 10/Season), секції метрик (GF/GA, special teams, faceoff/SOG, head-to-head).
-  - [ ] Дані: standings + derived stats; кешування згідно tech spec.
-  - [ ] CTA: “Open Next Game” → Game Center (якщо є у schedule).
+  - [x] UI: вибір Team A/Team B, range (Last 5/Last 10/Season), секції метрик (GF/GA, special teams, faceoff/SOG, head-to-head).
+  - [x] Дані: standings + derived stats; кешування згідно tech spec.
+  - [x] CTA: “Open Next Game” → Game Center (якщо є у schedule).
 
 - [ ] **Фаза 13 — Settings**
   - [ ] Date defaults (Today/Yesterday/Tomorrow).

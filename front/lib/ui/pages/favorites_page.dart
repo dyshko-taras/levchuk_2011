@@ -299,10 +299,9 @@ class _FavoriteGameCard extends StatelessWidget {
       null => AppColors.borderGray,
     };
 
-    final dateTime =
-        g == null
-            ? AppStrings.notAvailable
-            : _formatDateTimeLocal(g.startTimeUTC) ?? AppStrings.notAvailable;
+    final dateTime = g == null
+        ? AppStrings.notAvailable
+        : _formatDateTimeLocal(g.startTimeUTC) ?? AppStrings.notAvailable;
 
     final bellGoals = favorites.getGameAlertEnabled(
       gameId,

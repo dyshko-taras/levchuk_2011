@@ -13,6 +13,7 @@ import 'package:ice_line_tracker/enums/main_tab.dart';
 import 'package:ice_line_tracker/providers/home_provider.dart';
 import 'package:ice_line_tracker/providers/shell_navigation_provider.dart';
 import 'package:ice_line_tracker/providers/standings_provider.dart';
+import 'package:ice_line_tracker/ui/pages/compare_page.dart';
 import 'package:ice_line_tracker/ui/pages/favorites_page.dart';
 import 'package:ice_line_tracker/ui/pages/home_page.dart';
 import 'package:ice_line_tracker/ui/pages/standings_page.dart';
@@ -75,7 +76,7 @@ class _MainShellPageState extends State<MainShellPage> {
         children: const [
           HomePage(),
           StandingsPage(),
-          Center(child: Text(AppStrings.teamCompareTitle)),
+          ComparePage(),
           FavoritesPage(),
           Center(child: Text(AppStrings.gameInsightLabTitle)),
         ],
